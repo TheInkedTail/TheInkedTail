@@ -1,72 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
-    <style>body {
-    margin: 0;
-    font-family: 'Source Code Pro', monospace;;
-    background-color: #323436;
-    color: #1a1a1b;}#main-container {
-    text-align: center;
-    padding: 0 8vw;
-    background-color: #b0a99f;
-    max-width: 30vw;
-    min-height: 100vh;
-    margin: auto;
-    background-clip: padding-box;
-    border-right: dashed 2px #2f4858;
-    border-left: dashed 2px #2f4858;
-    filter: drop-shadow(0px 0px 5px #101010);}@media only screen and (max-width: 600px) {
-    #main-container { max-width: 100%; border: none; }}@media only screen and (min-width: 601px) and (max-width: 800px) {
-    #main-container { max-width: 60vw; }}@media only screen and (min-width: 801px) and (max-width: 1000px) {
-    #main-container { max-width: 45vw; }}.drop-shadow {
-    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, .2));}#construction-image {
-    width: 100%;
-    max-width: 500px;}h1 {
-    font-size: x-large;}#construction-text {
-    border-radius: 4px;
-    padding: 4px;
-    background-color: #84735b;
-    color: #1a1a1b;}#construction-subtext {
-    font-size: 18px;
-    margin-top: 10px;}#links {
-    max-width: 400px;
-    margin: 0 auto;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 2em;
-    gap: 10px;
-    flex-wrap: wrap;}a {
-    color: #1a1a1b;}#links > a {
-    text-decoration: underline;
-    flex-shrink: 0;}#links > a:before {
-    content: '•';
-    text-decoration: none;
-    display: inline-block;
-    margin-right: 1em;}</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Inked Tail</title>
-	<link rel="icon" href="assets/logo-beige.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-    <div id="main-container">
-        <img src="assets/logo-large.png" alt="the inked tail" id="construction-image" class="drop-shadow" />
-        <p id="bio">I'm a hobby writer that likes fantasy and sci-fi. You can find my stories on Royal Road and Amazon Kindle.</p>
+    <main id="main-container">
+        <img src="assets/logo-large.png" alt="The Inked Tail Logo" id="construction-image" class="drop-shadow" />
+        <p id="bio">I'm a hobby writer who loves fantasy and sci-fi. You can find my stories on Royal Road and Amazon Kindle.</p>
         <h1 id="construction-text" class="drop-shadow">Website under construction.</h1>
         <p id="construction-subtext">In the meantime, here are some links:</p>
-        <div id="links">
-            
-                <a href="https://www.royalroad.com/profile/708964">Royal Road</a>
-            
-                <a href="https://x.com/TheInkedTail">Tail of The Stray X Profile</a>
-            
-                <a href="https://www.amazon.com/stores/Michael-Garcia/author/B0F74F5L97?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=d47a277f-486f-49e7-a6b3-42add8c6f440">Amazon Author Page</a>
-            
-        </div>
-    </div>
+        <nav id="links">
+            <a href="https://www.royalroad.com/profile/708964">Royal Road</a>
+            <a href="https://x.com/TheInkedTail">Tail of The Stray X Profile</a>
+            <a href="https://www.amazon.com/stores/Michael-Garcia/author/B0F74F5L97?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=d47a277f-486f-49e7-a6b3-42add8c6f440">Amazon Author Page</a>
+        </nav>
+    </main>
 </body>
 </html>
