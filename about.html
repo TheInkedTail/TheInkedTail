@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About | Michael Garcia</title>
+  <style>
+    :root {
+      --bg-color: #2b2d31;
+      --header-bg: #1e1f22;
+      --accent-color: #4de37d;
+      --text-color: #dcddde;
+      --muted-color: #b9bbbe;
+      --card-bg: #313338;
+      --footer-bg: #1e1f22;
+      --hover-bg: #3e4147;
+      --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+	.navbar {
+	  background-color: var(--header-bg);
+	  display: flex;
+	  justify-content: center;
+	  gap: 2rem;
+	  padding: 1rem;
+	  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+	  position: sticky;
+	  top: 0;
+	  z-index: 1000;
+	}
+
+	.navbar a {
+	  color: var(--text-color);
+	  text-decoration: none;
+	  font-weight: bold;
+	  transition: color 0.2s ease;
+	}
+
+	.navbar a:hover {
+	  color: var(--accent-color);
+	}
+
+    header {
+      background-color: var(--header-bg);
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent-color);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: var(--muted-color);
+    }
+
+    .hero {
+      background: url('https://source.unsplash.com/1600x600/?writing,dark') no-repeat center center/cover;
+      padding: 5rem 1rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(43, 45, 49, 0.7);
+      z-index: 0;
+    }
+
+    .hero h1,
+    .hero p {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted-color);
+    }
+
+    .about-section {
+      max-width: 900px;
+      margin: 3rem auto;
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .about-section h2 {
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .about-section p {
+      margin-bottom: 1.2rem;
+      color: var(--muted-color);
+      font-size: 1.05rem;
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem auto 1rem;
+      flex-wrap: wrap;
+    }
+
+    .links a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      color: var(--muted-color);
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .about-section {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="Index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="Schedule.html">Schedule</a>
+    <a href="Contact.html">Contact</a>
+    <a href="https://www.royalroad.com/profile/708964" target="_blank">Royal Road</a>
+    <a href="https://x.com/TheInkedTail" target="_blank">X</a>
+  </nav>
+  
+  <header>
+    <h1>The Inked Tail</h1>
+    <p>Welcome to the official website of the author Michael Garcia</p>
+  </header>
+
+  <section class="hero">
+    <h1>About the Author</h1>
+    <p>Get to know the mind behind the words.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>Meet Michael</h2>
+    <p>Michael Garcia is a fantasy and speculative fiction author whose work delves into the rich, strange, and sometimes unsettling corners of storytelling. With a love for character-driven narratives and intricate worldbuilding, his stories often explore themes of identity, loss, resilience, and redemption.</p>
+    
+    <p>Raised on epic novels, tabletop games, and myth, Michael’s early fascination with storytelling evolved into a full-fledged craft. He draws inspiration from a wide spectrum of sources — from classical literature to contemporary indie writers, from gritty sci-fi to folklore and fable.</p>
+
+    <p>When he’s not writing, Michael is usually outlining his next world, researching obscure histories, or connecting with readers. He believes stories aren’t just entertainment — they’re a shared experience.</p>
+
+    <p>Michael currently publishes serialized fiction on <a href="https://www.royalroad.com/profile/708964" style="color: var(--accent-color); text-decoration: underline;">Royal Road</a>, with two growing titles under his belt and more to come.</p>
+  </section>
+
+  <div class="links">
+    <a href="https://www.royalroad.com/profile/708964">Royal Road</a>
+    <a href="https://x.com/TheInkedTail">X Profile</a>
+    <a href="https://www.amazon.com/stores/Michael-Garcia/author/B0F74F5L97?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=306bda97-f6a5-498f-b119-cb25ebedbadc">Amazon Author Page</a>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Michael Garcia. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
