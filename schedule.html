@@ -77,53 +77,70 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
-  .calendar-header {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: var(--accent-color);
-  }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: var(--accent-color);
+      font-size: 1.5rem;
+    }
 
-  .calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    border: 1px solid #444;
-  }
+    .calendar-header button {
+      background-color: var(--hover-bg);
+      color: var(--text-color);
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
 
-  .calendar > div {
-    border: 1px solid #444;
-    background-color: var(--bg-color);
-    padding: 0.75rem;
-    min-height: 100px;
-    position: relative;
-    color: var(--text-color);
-  }
+    .calendar-header button:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+    }
 
-  .calendar .day-name {
-    background-color: var(--header-bg);
-    color: var(--muted-color);
-    font-weight: bold;
-    text-align: center;
-  }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border: 1px solid #444;
+    }
 
-  .calendar .day-number {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    font-size: 0.95rem;
-    font-weight: bold;
-    color: var(--text-color);
-  }
+    .calendar > div {
+      border: 1px solid #444;
+      background-color: var(--bg-color);
+      padding: 0.75rem;
+      min-height: 100px;
+      position: relative;
+      color: var(--text-color);
+    }
 
-  .event {
-    margin-top: 1.5rem;
-    background-color: var(--accent-color);
-    color: #1e1f22;
-    padding: 0.4rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
+    .calendar .day-name {
+      background-color: var(--header-bg);
+      color: var(--muted-color);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .calendar .day-number {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    .event {
+      margin-top: 1.5rem;
+      background-color: var(--accent-color);
+      color: #1e1f22;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
 
     footer {
       background-color: var(--footer-bg);
@@ -147,14 +164,16 @@
 
   <header>
     <h1>Schedule</h1>
-    <p>See what’s coming up for The Inked Tail</p>
+    <p>New chapters weekly, every Sunday morning!</p>
   </header>
 
   <section class="calendar-container">
-    <div class="calendar-header" id="calendarTitle"></div>
-    <div class="calendar" id="calendarGrid">
-      <!-- Calendar days will be injected here -->
+    <div class="calendar-header">
+      <button id="prevMonth">&lt;</button>
+      <span id="calendarTitle"></span>
+      <button id="nextMonth">&gt;</button>
     </div>
+    <div class="calendar" id="calendarGrid"></div>
   </section>
 
   <footer>
@@ -164,59 +183,90 @@
   <script>
     const calendarTitle = document.getElementById("calendarTitle");
     const calendarGrid = document.getElementById("calendarGrid");
+    const prevMonthBtn = document.getElementById("prevMonth");
+    const nextMonthBtn = document.getElementById("nextMonth");
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
 
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
 
-    const monthStart = new Date(year, month, 1);
-    const monthEnd = new Date(year, month + 1, 0);
-    const daysInMonth = monthEnd.getDate();
-    const startDay = monthStart.getDay();
+    // Events database
+    const events = {
+      "2025-05-18": "Vol. 2 - Chapter 3",
+      "2025-05-25": "Vol. 2 - Chapter 4",
+      "2025-06-01": "Vol. 2 - Chapter 5",
+      "2025-06-08": "Vol. 2 - Chapter 6",
+      "2025-06-15": "Vol. 2 - Chapter 7",
+      "2025-06-22": "Vol. 2 - Chapter 8"
+    };
 
-    // Month title
-    calendarTitle.textContent = `${now.toLocaleString('default', { month: 'long' })} ${year}`;
+    function renderCalendar(month, year) {
+      calendarGrid.innerHTML = "";
 
-    // Add day names
-    dayNames.forEach(day => {
-      const cell = document.createElement("div");
-      cell.textContent = day;
-      cell.classList.add("day-name");
-      calendarGrid.appendChild(cell);
-    });
+      // Month title
+      const date = new Date(year, month);
+      const monthName = date.toLocaleString('default', { month: 'long' });
+      calendarTitle.textContent = `${monthName} ${year}`;
 
-    // Blank cells before start
-    for (let i = 0; i < startDay; i++) {
-      const blank = document.createElement("div");
-      calendarGrid.appendChild(blank);
-    }
+      // Add day names
+      dayNames.forEach(day => {
+        const cell = document.createElement("div");
+        cell.textContent = day;
+        cell.classList.add("day-name");
+        calendarGrid.appendChild(cell);
+      });
 
-    // Add days
-    for (let d = 1; d <= daysInMonth; d++) {
-      const dayCell = document.createElement("div");
+      const monthStart = new Date(year, month, 1);
+      const monthEnd = new Date(year, month + 1, 0);
+      const startDay = monthStart.getDay();
+      const daysInMonth = monthEnd.getDate();
 
-      const dayNumber = document.createElement("div");
-      dayNumber.textContent = d;
-      dayNumber.classList.add("day-number");
-      dayCell.appendChild(dayNumber);
-
-      // Add custom events manually here
-      const eventMap = {
-        18: "Vol. 2 - Chapter 3",
-        25: "Vol. 2 - Chapter 4"
-      };
-
-      if (eventMap[d]) {
-        const eventEl = document.createElement("div");
-        eventEl.classList.add("event");
-        eventEl.textContent = eventMap[d];
-        dayCell.appendChild(eventEl);
+      // Blank cells before first day
+      for (let i = 0; i < startDay; i++) {
+        const blank = document.createElement("div");
+        calendarGrid.appendChild(blank);
       }
 
-      calendarGrid.appendChild(dayCell);
-    }
-  </script>
+      // Day cells
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayCell = document.createElement("div");
+        const dayNumber = document.createElement("div");
+        dayNumber.classList.add("day-number");
+        dayNumber.textContent = d;
+        dayCell.appendChild(dayNumber);
 
+        const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        if (events[key]) {
+          const eventEl = document.createElement("div");
+          eventEl.classList.add("event");
+          eventEl.textContent = events[key];
+          dayCell.appendChild(eventEl);
+        }
+
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+
+    prevMonthBtn.addEventListener("click", () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar(currentMonth, currentYear);
+    });
+
+    nextMonthBtn.addEventListener("click", () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar(currentMonth, currentYear);
+    });
+
+    renderCalendar(currentMonth, currentYear);
+  </script>
 </body>
 </html>

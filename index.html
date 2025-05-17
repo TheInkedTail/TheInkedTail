@@ -270,6 +270,19 @@
       padding: 1.5rem 1rem;
       font-size: 0.9rem;
     }
+	
+	.logo-title {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  gap: 1rem;
+	  flex-wrap: wrap;
+	}
+
+	.logo-title .logo {
+	  height: 250px; /* adjust the height as needed */
+	  width: auto;  /* keeps the aspect ratio */
+	}
 
     @media (max-width: 768px) {
       .hero h1 {
@@ -301,8 +314,11 @@
   </nav>
 
   <header>
+  <div class="logo-title">
+    <img src="assets/logo-large.png" alt="Logo" class="logo" />
+  </div>
     <h1>The Inked Tail</h1>
-    <p>Welcome to the official website of the author Michael Garcia</p>
+    <p>Welcome to the official website of the author, Michael Garcia</p>
   </header>
 
   <section class="hero">
