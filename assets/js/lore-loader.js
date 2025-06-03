@@ -11,7 +11,6 @@ const entries = [
     story: "Tail of the Stray",
     category: "Races"
   }
-  // Add more entries as needed
 ];
 
 async function loadLoreList() {
