@@ -1,3 +1,3 @@
-# The Vulpin
+# Test Lore Entry
 
-The **Vulpin** are a rare, foxlike race k
+This is a test.
