@@ -1,6 +1,6 @@
 const entries = [
   {
-    file: "lore-content/tail-of-the-stray/races/Vulpin.md",
+    file: "lore-content/tail-of-the-stray/races/Vulpin2.md",
     title: "Vulpin",
     story: "Tail of the Stray",
     category: "Races"
