@@ -11,7 +11,7 @@ const entries = [
     story: "Tail of the Stray",
     category: "Races"
   }
-  // Add more entries here...
+  // Add more entries as needed
 ];
 
 async function loadLoreList() {
@@ -28,6 +28,7 @@ async function loadLoreList() {
   for (const entry of filtered) {
     try {
       const res = await fetch(entry.file);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
       const html = marked.parse(text);
 
@@ -36,14 +37,17 @@ async function loadLoreList() {
       div.innerHTML = `
         <h2>${entry.title}</h2>
         <div class="meta">${entry.story} | ${entry.category}</div>
-        ${html}`;
+        ${html}
+      `;
       container.appendChild(div);
     } catch (e) {
       console.error(`Failed to load ${entry.title}:`, e);
-      container.innerHTML += `<p>Failed to load ${entry.title}</p>`;
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "lore-entry";
+      errorDiv.innerHTML = `<h2>${entry.title}</h2><p>Failed to load this entry.</p>`;
+      container.appendChild(errorDiv);
     }
   }
 }
 
-// ✅ Make the function available globally
 window.loadLoreList = loadLoreList;

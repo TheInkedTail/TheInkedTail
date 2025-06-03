@@ -97,6 +97,24 @@
       margin-bottom: 1rem;
     }
 
+    /* Ensure Markdown inside lore-entry matches theme */
+    .lore-entry, .lore-entry * {
+      color: var(--text-color);
+      background-color: transparent;
+    }
+
+    .lore-entry a {
+      color: var(--accent-color);
+    }
+
+    .lore-entry code, .lore-entry pre {
+      background-color: #1e1f22;
+      padding: 0.5em;
+      border-radius: 4px;
+      display: block;
+      overflow-x: auto;
+    }
+
     footer {
       background-color: var(--footer-bg);
       color: var(--muted-color);
@@ -105,37 +123,6 @@
       font-size: 0.9rem;
       margin-top: 3rem;
     }
-	
-	.lore-entry h1,
-.lore-entry h2,
-.lore-entry h3,
-.lore-entry h4,
-.lore-entry h5,
-.lore-entry h6,
-.lore-entry p,
-.lore-entry ul,
-.lore-entry ol,
-.lore-entry li,
-.lore-entry blockquote,
-.lore-entry pre,
-.lore-entry code {
-  color: var(--text-color);
-  background-color: transparent;
-}
-
-.lore-entry a {
-  color: var(--accent-color);
-}
-
-.lore-entry pre,
-.lore-entry code {
-  background-color: #1e1f22;
-  padding: 0.5em;
-  border-radius: 4px;
-  display: block;
-  overflow-x: auto;
-}
-
   </style>
 </head>
 <body>
@@ -144,29 +131,25 @@
   <a href="index.html">Home</a>
   <a href="about.html">About</a>
   <a href="schedule.html">Schedule</a>
-  <a href="lore.html">Lore</a>
   <a href="contact.html">Contact</a>
+  <a href="lore.html">Lore</a>
   <a href="https://www.royalroad.com/profile/708964" target="_blank">Royal Road</a>
   <a href="https://x.com/TheInkedTail" target="_blank">X</a>
 </nav>
 
-<header style="text-align: center; padding: 2rem;">
-  <h1 style="color: #4de37d;">Lore Archive</h1>
-  <p style="color: #b9bbbe;">Take a deep dive into my stories' lore.</p>
+<header>
+  <h1>Lore Archive</h1>
+  <p>Take a deep dive into my stories' lore.</p>
 </header>
 
 <main>
-  <h1>Lore Archive</h1>
-
   <label for="story">Story:</label>
   <select id="story">
-    <option value="all">All</option>
     <option value="Tail of the Stray">Tail of the Stray</option>
   </select>
 
   <label for="category">Category:</label>
   <select id="category">
-    <option value="all">All</option>
     <option value="Races">Races</option>
     <option value="Locations">Locations</option>
     <option value="Deities">Deities</option>
@@ -178,7 +161,7 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="assets/js/lore-loader.js"></script>
+<script src="/assets/js/lore-loader.js"></script>
 
 <footer>
   &copy; 2025 The Inked Tail. All rights reserved. Website by TheInkedTail.
