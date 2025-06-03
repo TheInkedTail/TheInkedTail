@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lore | The Inked Tail</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #2b2d31;
+      color: #dcddde;
+      padding: 2rem;
+    }
+    h1, h2 {
+      color: #4de37d;
+    }
+    select, button {
+      margin: 0.5rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    #lore-output {
+      margin-top: 2rem;
+      background: #313338;
+      padding: 1.5rem;
+      border-radius: 10px;
+    }
+    .entry-title {
+      margin-top: 2rem;
+      font-size: 1.4rem;
+      color: #4de37d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lore Archive</h1>
+
+  <label for="story">Story:</label>
+  <select id="story">
+    <option value="Tail-of-the-Stray">Tail of the Stray</option>
+  </select>
+
+  <label for="category">Category:</label>
+  <select id="category">
+    <option value="Races">Races</option>
+    <option value="Locations">Locations</option>
+    <option value="Deities">Deities</option>
+  </select>
+
+  <button onclick="loadLoreList()">Load Entries</button>
+
+  <div id="lore-list"></div>
+  <div id="lore-output"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="assets/js/lore-loader.js"></script>
+</body>
+</html>
