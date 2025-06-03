@@ -1,13 +1,13 @@
 const entries = [
   {
-    file: "content/lore/Vulpin.md",
+    file: "/lore-content/tail-of-the-stray/races/Vulpin.md",
     title: "Vulpin",
     story: "Tail of the Stray",
-    category: "Locations"
+    category: "Races"
   },
   {
-    file: "content/lore/Lupinfolk.md",
-    title: "Lupinfolk",
+    file: "/lore-content/tail-of-the-stray/races/Vulpin2.md",
+    title: "Vulpin2",
     story: "Tail of the Stray",
     category: "Races"
   }
@@ -44,3 +44,6 @@ async function loadLoreList() {
     }
   }
 }
+
+// ✅ Make the function available globally
+window.loadLoreList = loadLoreList;

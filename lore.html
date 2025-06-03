@@ -124,15 +124,18 @@
   <p style="color: #b9bbbe;">Take a deep dive into my stories' lore.</p>
 </header>
 
+<main>
   <h1>Lore Archive</h1>
 
   <label for="story">Story:</label>
   <select id="story">
-    <option value="Tail-of-the-Stray">Tail of the Stray</option>
+    <option value="all">All</option>
+    <option value="Tail of the Stray">Tail of the Stray</option>
   </select>
 
   <label for="category">Category:</label>
   <select id="category">
+    <option value="all">All</option>
     <option value="Races">Races</option>
     <option value="Locations">Locations</option>
     <option value="Deities">Deities</option>
@@ -141,13 +144,14 @@
   <button onclick="loadLoreList()">Load Entries</button>
 
   <div id="lore-list"></div>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="/assets/js/lore-loader.js"></script>
-  
-  <footer>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="assets/js/lore-loader.js"></script>
+
+<footer>
   &copy; 2025 The Inked Tail. All rights reserved. Website by TheInkedTail.
-  </footer>
+</footer>
 
 </body>
 </html>
