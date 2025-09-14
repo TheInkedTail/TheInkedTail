@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>D&amp;D Character Sheet — Restored &amp; Improved (Bugfix)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&amp;family=IM+Fell+English:ital@0;1&amp;display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --parchment:#f6efe2;
+      --paper:#fffdf8;
+      --ink:#2b1f17;
+      --accent:#7b2f2f;
+      --accent-dark:#4f1a1a;
+      --border:#66402c;
+      --gold:#d5b67a;
+    }
+
+    html,body{height:100%;}
+    body{font-family: 'IM Fell English', Georgia, serif;background:linear-gradient(180deg,var(--parchment),#efe6d8);color:var(--ink);margin:0;padding:0}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:80;background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:white;padding:.5rem 1rem;border-bottom:4px solid rgba(0,0,0,0.25);box-shadow:0 6px 18px rgba(0,0,0,0.25)}
+    .topbar a{color:rgba(255,255,255,0.95);text-decoration:none;padding:.35rem .6rem;border-radius:6px;font-weight:700}
+    .topbar a:hover{background:rgba(0,0,0,0.08)}
+    .topbar .btn{background:linear-gradient(180deg,var(--gold),#b88a40);padding:.4rem .7rem;border-radius:6px;color:#2b1f17;font-weight:700}
+    .topbar .btn.secondary{background:transparent;border:2px solid rgba(255,255,255,0.15);color:white}
+
+    /* Page container */
+    .container{max-width:1200px;margin:1rem auto;padding:1rem}
+
+    /* Section card */
+    .sheet-section{background:var(--paper);border:3px solid var(--border);border-radius:12px;padding:1rem;box-shadow:0 10px 30px rgba(17,12,8,0.12);overflow:hidden}
+
+    /* inputs */
+    .dnd-input{display:block;width:100%;padding:.45rem .6rem;border:1px solid rgba(0,0,0,0.12);border-radius:8px;background:linear-gradient(180deg,#fff,#fbf6ee);min-height:36px;box-sizing:border-box}
+    textarea.dnd-input{min-height:3.4rem;resize:vertical}
+    input[type=number].dnd-input{text-align:center}
+
+    /* portrait */
+    .portrait{width:150px;height:150px;border-radius:10px;overflow:hidden;border:4px solid var(--border);background:linear-gradient(180deg,#fffdf7,#fbf2df)}
+    .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+
+    /* abilities */
+    .ability-block{display:flex;flex-direction:column;align-items:center;padding:.6rem;border-radius:8px;border:1px dashed rgba(0,0,0,0.06);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(250,245,235,0.9))}
+
+    /* skill proficiency */
+    .skill-proficiency{width:26px;height:26px;border-radius:6px;border:2px solid var(--accent);display:inline-grid;place-items:center;font-weight:700;cursor:pointer;user-select:none;background:linear-gradient(180deg,#fff,#f4efe2)}
+    .skill-proficiency[data-pro="0"]{opacity:0.35}
+
+    /* lists */
+    .list-stack{display:flex;flex-direction:column;gap:.6rem}
+    .list-item{background:linear-gradient(180deg,#fff,#fbf6ee);border:2px solid rgba(0,0,0,0.06);padding:.6rem;border-radius:8px;display:flex;flex-direction:column;gap:.4rem}
+
+    /* buttons */
+    .small-btn{padding:.35rem .6rem;border-radius:6px;background:#efe7d1;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+
+    /* prevent overlap and force wrap */
+    .dnd-input, input, select, textarea{word-break:break-word;overflow-wrap:break-word}
+    .row{display:flex;gap:.6rem;align-items:center}
+    .col{display:flex;flex-direction:column;gap:.4rem}
+
+    /* print styles */
+    @media print{
+      body{background:white;color:black}
+      .topbar{display:none}
+      .container{max-width:100%;padding:0}
+      .sheet-section{border:none;box-shadow:none}
+      .small-btn,.trash-btn{display:none}
+    }
+
+    /* responsive tweaks */
+    @media (max-width:900px){
+      .portrait{width:110px;height:110px}
+      .row{flex-direction:column;align-items:stretch}
+    }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.block{display:block}.flex{display:flex}.grid{display:grid}.list-item{display:list-item}.h-20{height:5rem}.h-24{height:6rem}.h-28{height:7rem}.h-40{height:10rem}.w-full{width:100%}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-1{grid-column:span 1 / span 1}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body>
+  <div class="topbar">
+    <div class="container flex justify-between items-center">
+      <nav class="flex gap-2 items-center">
+        <a href="#char-info">Character</a>
+        <a href="#abilities">Abilities</a>
+        <a href="#combat">Combat</a>
+        <a href="#spells">Spells</a>
+        <a href="#inventory">Inventory</a>
+        <a href="#details">Details</a>
+		<a href="https://www.theinkedtail.com/" target="_blank">Mike's Website</a>
+      </nav>
+      <div class="flex gap-2">
+        <button class="btn" onclick="saveCharacterSheet()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-save"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save</button>
+        <button class="btn secondary" onclick="window.print()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container space-y-6">
+    <!-- header -->
+    <header class="text-center">
+      <h1 style="font-family:'Cinzel',serif;font-size:28px;margin:0;color:var(--accent)">Dungeons &amp; Dragons — Character Sheet</h1>
+      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Mike's HTML character sheet V1.0</p>
+	  <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">This tool will automatically track numbers for skills and stats. Just fill in the spaces and click save. You can open the HTML file in any browser and edit later.</P>
+    </header>
+
+    <!-- Character info -->
+    <section id="char-info" class="sheet-section grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="row items-start">
+        <div class="portrait" id="portrait-box"><img id="character-portrait" src="https://placekitten.com/300/300" alt="portrait"></div>
+        <div style="flex:1">
+          <div class="col">
+            <input id="character-name" class="dnd-input text-2xl font-bold" placeholder="Character Name">
+            <div class="grid grid-cols-2 gap-2">
+              <input id="character-class" class="dnd-input" placeholder="Class &amp; Level">
+              <input id="character-race" class="dnd-input" placeholder="Race">
+              <input id="player-name" class="dnd-input" placeholder="Player">
+              <input id="character-background" class="dnd-input" placeholder="Background">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="character-alignment" class="dnd-input" placeholder="Alignment">
+            <input id="character-xp" class="dnd-input" type="number" placeholder="XP">
+            <input id="character-ac" class="dnd-input" type="number" placeholder="AC">
+            <input id="character-initiative" class="dnd-input" type="number" placeholder="Initiative">
+            <input id="character-speed" class="dnd-input" placeholder="Speed">
+            <input id="proficiency-bonus" class="dnd-input" type="number" value="2" placeholder="Proficiency">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col">
+          <div class="row">
+            <input id="character-hp-current" class="dnd-input" type="number" placeholder="Current HP">
+            <input id="character-hp-max" class="dnd-input" type="number" placeholder="Max HP">
+          </div>
+          <input id="character-hit-dice" class="dnd-input" placeholder="Hit Dice">
+          <div class="row" style="align-items:center">
+            <input id="portrait-url" class="dnd-input" placeholder="Portrait image URL (works with Imgur links)">
+            <button class="small-btn" onclick="applyPortraitUrl()">Apply</button>
+          </div>
+          <input id="portrait-input" type="file" accept="image/*" class="mt-1" onchange="updatePortrait(this)">
+        </div>
+      </div>
+    </section>
+
+    <!-- Abilities + Skills + Combat -->
+    <section id="abilities" class="sheet-section grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Abilities -->
+      <div>
+        <h3 class="font-bold">Ability Scores</h3>
+        <div class="grid grid-cols-3 gap-2 mt-2" id="abilities-grid"><div class="ability-block">
+          <div style="font-weight:700">STR</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="str" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        </div><div class="ability-block">
+          <div style="font-weight:700">DEX</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="dex" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        </div><div class="ability-block">
+          <div style="font-weight:700">CON</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="con" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        </div><div class="ability-block">
+          <div style="font-weight:700">INT</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="int" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        </div><div class="ability-block">
+          <div style="font-weight:700">WIS</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="wis" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        </div><div class="ability-block">
+          <div style="font-weight:700">CHA</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="cha" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        </div></div>
+
+        <div class="mt-4">
+          <h4 class="font-semibold">Saving Throws</h4>
+          <div id="saves-list" class="space-y-2 mt-2"><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="str-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">STR Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="str-save-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="dex-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">DEX Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="dex-save-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="con-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">CON Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="con-save-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="int-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">INT Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="int-save-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="wis-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">WIS Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="wis-save-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="cha-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">CHA Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="cha-save-mod">+0</div>
+        </div></div>
+        </div>
+
+        <div class="mt-3">
+          <div class="row">
+            <label class="col">
+              <span>Inspiration</span>
+              <input type="checkbox" id="inspiration">
+            </label>
+            <label class="col">
+              <span>Passive Perception</span>
+              <input id="passive-perception" class="dnd-input" readonly="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="lg:col-span-1">
+        <h3 class="font-bold">Skills</h3>
+        <div id="skills-list" class="space-y-2 mt-2"><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="acrobatics" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Acrobatics <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(DEX)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="acrobatics-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="animal-handling" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Animal Handling <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(WIS)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="animal-handling-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="arcana" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Arcana <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(INT)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="arcana-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="athletics" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Athletics <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(STR)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="athletics-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="deception" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Deception <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(CHA)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="deception-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="history" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">History <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(INT)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="history-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="insight" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Insight <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(WIS)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="insight-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="intimidation" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Intimidation <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(CHA)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="intimidation-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="investigation" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Investigation <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(INT)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="investigation-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="medicine" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Medicine <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(WIS)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="medicine-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="nature" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Nature <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(INT)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="nature-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="perception" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Perception <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(WIS)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="perception-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="performance" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Performance <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(CHA)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="performance-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="persuasion" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Persuasion <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(CHA)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="persuasion-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="religion" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Religion <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(INT)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="religion-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="sleight-of-hand" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Sleight of Hand <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(DEX)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="sleight-of-hand-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="stealth" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Stealth <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(DEX)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="stealth-mod">+0</div>
+        </div><div class="row" style="align-items: center;">
+          <div style="width:36px"><div class="skill-proficiency" data-skill="survival" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">Survival <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(WIS)</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="survival-mod">+0</div>
+        </div></div>
+      </div>
+
+      <!-- Features & Traits -->
+      <div>
+        <h3 class="font-bold">Features &amp; Traits</h3>
+        <label class="text-sm mt-1">Class Features</label>
+        <textarea id="class-features" class="dnd-input w-full h-28"></textarea>
+        <label class="text-sm mt-2">Racial Traits</label>
+        <textarea id="racial-traits" class="dnd-input w-full h-20"></textarea>
+      </div>
+
+      <!-- Combat (weapons/armor) -->
+      <div id="combat">
+        <h3 class="font-bold">Combat</h3>
+        <div>
+          <label class="block text-sm">Weapons</label>
+          <div id="weapons-list" class="list-stack mt-2"><div class="list-item">
+        <div class="row">
+          <input class="dnd-input" placeholder="Weapon Name" value="New Weapon">
+          <input class="dnd-input" placeholder="Attack bonus" value="+0">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Damage" value="1d6">
+          <input class="dnd-input" placeholder="Range / Properties" value="">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+        </div>
+      </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addWeapon()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Weapon</button></div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-sm">Armor</label>
+          <div id="armor-list" class="list-stack mt-2"><div class="list-item">
+        <div class="row">
+          <input class="dnd-input" placeholder="Armor Name" value="New Armor">
+          <input class="dnd-input" placeholder="AC" value="10">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Type" value="Light">
+          <input class="dnd-input" placeholder="Stealth" value="-">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+        </div>
+      </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addArmor()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Armor</button></div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-sm">Passive Investigation</label>
+          <input id="passive-investigation" class="dnd-input w-full" readonly="">
+        </div>
+      </div>
+    </section>
+
+    <!-- Spells -->
+    <section id="spells" class="sheet-section">
+      <h3 class="font-bold">Spells</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
+        <div>
+          <label class="text-sm">Spellcasting Ability</label>
+          <select id="spellcasting-ability" class="dnd-input w-full">
+            <option value="int">Intelligence</option>
+            <option value="wis">Wisdom</option>
+            <option value="cha">Charisma</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm">Spell Save DC</label>
+          <input id="spell-save-dc" class="dnd-input w-full" readonly="">
+        </div>
+        <div>
+          <label class="text-sm">Spell Attack Bonus</label>
+          <input id="spell-attack-bonus" class="dnd-input w-full" readonly="">
+        </div>
+        <div>
+          <label class="text-sm">Search</label>
+          <input id="spell-filter" class="dnd-input w-full" placeholder="Filter spells by name..." oninput="renderSpells()">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div>
+          <h4 class="font-semibold">Cantrips</h4>
+          <div id="cantrips-list" class="list-stack mt-2"><div class="list-item">
+        <div class="row">
+          <input class="dnd-input spell-name" placeholder="Spell Name" value="New Spell">
+          <select class="dnd-input spell-level" style="width:100px">
+        <option value="0">0 (Cantrip)</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+      </select>
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Range" value="">
+          <input class="dnd-input" placeholder="Duration" value="">
+        </div>
+        <textarea class="dnd-input" placeholder="Description"></textarea>
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <button class="small-btn" onclick="selectSpell(this)" title="Open in detail">Open</button>
+          </div>
+          <div>
+            <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+          </div>
+        </div>
+      </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addSpell('cantrip')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Cantrip</button></div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold">Prepared Spells</h4>
+          <div id="prepared-spells-list" class="list-stack mt-2"><div class="list-item">
+        <div class="row">
+          <input class="dnd-input spell-name" placeholder="Spell Name" value="New Spell">
+          <select class="dnd-input spell-level" style="width:100px">
+        <option value="0">0 (Cantrip)</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+      </select>
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Range" value="">
+          <input class="dnd-input" placeholder="Duration" value="">
+        </div>
+        <textarea class="dnd-input" placeholder="Description"></textarea>
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <button class="small-btn" onclick="selectSpell(this)" title="Open in detail">Open</button>
+          </div>
+          <div>
+            <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+          </div>
+        </div>
+      </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addSpell('prepared')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Spell</button></div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold">Spell Details</h4>
+          <textarea id="spell-description" class="dnd-input w-full h-40" placeholder="Select a spell to view or edit its full description"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inventory -->
+    <section id="inventory" class="sheet-section">
+      <h3 class="font-bold">Inventory</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+        <div>
+          <h4 class="font-semibold">Equipped</h4>
+          <div id="equipped-items-list" class="list-stack mt-2"><div class="list-item">
+        <div class="row">
+          <input class="dnd-input" placeholder="Item Name" value="Item">
+          <input class="dnd-input" placeholder="Quantity" value="1">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Weight" value="">
+          <input class="dnd-input" placeholder="Notes">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+        </div>
+      </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addItem('equipped')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Item</button></div>
+        </div>
+        <div>
+          <h4 class="font-semibold">Backpack</h4>
+          <div id="backpack-items-list" class="list-stack mt-2"><div class="list-item">
+        <div class="row">
+          <input class="dnd-input" placeholder="Item Name" value="Item">
+          <input class="dnd-input" placeholder="Quantity" value="1">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Weight" value="">
+          <input class="dnd-input" placeholder="Notes">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+        </div>
+      </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addItem('backpack')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Item</button></div>
+        </div>
+        <div>
+          <h4 class="font-semibold">Other Containers</h4>
+          <div id="other-containers-list" class="list-stack mt-2"><div class="list-item">
+      <div class="row"><input class="dnd-input" placeholder="Container Name" value="New Container"></div>
+      <div class="row"><div class="list-stack container-contents"></div></div>
+      <div class="row" style="justify-content:space-between"><button class="small-btn" onclick="addItemToContainer(this)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Item</button><button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button></div>
+    </div></div>
+          <div class="mt-2"><button class="small-btn" onclick="addContainer()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Container</button></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <h4 class="font-semibold">Currency</h4>
+          <div class="grid grid-cols-5 gap-2 mt-2">
+            <input id="currency-cp" class="dnd-input" placeholder="CP" type="number">
+            <input id="currency-sp" class="dnd-input" placeholder="SP" type="number">
+            <input id="currency-ep" class="dnd-input" placeholder="EP" type="number">
+            <input id="currency-gp" class="dnd-input" placeholder="GP" type="number">
+            <input id="currency-pp" class="dnd-input" placeholder="PP" type="number">
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold">Encumbrance</h4>
+          <div class="grid grid-cols-3 gap-2 mt-2">
+            <input id="carried-weight" class="dnd-input" placeholder="Carried" type="number">
+            <input id="max-capacity" class="dnd-input" placeholder="Max" type="number">
+            <input id="encumbrance-status" class="dnd-input" placeholder="Status" readonly="">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Details -->
+    <section id="details" class="sheet-section">
+      <h3 class="font-bold">Character Details</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+        <div>
+          <label class="text-sm">Appearance</label>
+          <textarea id="character-appearance" class="dnd-input w-full h-40"></textarea>
+        </div>
+        <div>
+          <label class="text-sm">Backstory</label>
+          <textarea id="character-backstory" class="dnd-input w-full h-40"></textarea>
+        </div>
+        <div>
+          <label class="text-sm">Vitals</label>
+          <div class="grid grid-cols-2 gap-2 mt-1">
+            <input id="detail-height" class="dnd-input" placeholder="Height">
+            <input id="detail-weight" class="dnd-input" placeholder="Weight">
+            <input id="detail-age" class="dnd-input" placeholder="Age">
+            <input id="detail-eyes" class="dnd-input" placeholder="Eyes">
+            <input id="detail-skin" class="dnd-input" placeholder="Skin">
+            <input id="detail-hair" class="dnd-input" placeholder="Hair">
+          </div>
+          <label class="text-sm mt-2">Allies &amp; Organizations</label>
+          <textarea id="character-allies" class="dnd-input w-full h-24"></textarea>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    feather.replace();
+
+    // --- Data definitions ---
+    const abilities = [
+      {abbr:'STR',id:'str'}, {abbr:'DEX',id:'dex'}, {abbr:'CON',id:'con'},
+      {abbr:'INT',id:'int'}, {abbr:'WIS',id:'wis'}, {abbr:'CHA',id:'cha'}
+    ];
+
+    const skills = [
+      {id:'acrobatics',label:'Acrobatics',ability:'dex'}, {id:'animal-handling',label:'Animal Handling',ability:'wis'},
+      {id:'arcana',label:'Arcana',ability:'int'}, {id:'athletics',label:'Athletics',ability:'str'},
+      {id:'deception',label:'Deception',ability:'cha'}, {id:'history',label:'History',ability:'int'},
+      {id:'insight',label:'Insight',ability:'wis'}, {id:'intimidation',label:'Intimidation',ability:'cha'},
+      {id:'investigation',label:'Investigation',ability:'int'}, {id:'medicine',label:'Medicine',ability:'wis'},
+      {id:'nature',label:'Nature',ability:'int'}, {id:'perception',label:'Perception',ability:'wis'},
+      {id:'performance',label:'Performance',ability:'cha'}, {id:'persuasion',label:'Persuasion',ability:'cha'},
+      {id:'religion',label:'Religion',ability:'int'}, {id:'sleight-of-hand',label:'Sleight of Hand',ability:'dex'},
+      {id:'stealth',label:'Stealth',ability:'dex'}, {id:'survival',label:'Survival',ability:'wis'}
+    ];
+
+    // Build ability inputs — only if the container is empty (prevents duplication on saved-file reload)
+    const abilitiesGrid = document.getElementById('abilities-grid');
+    if (abilitiesGrid && abilitiesGrid.children.length === 0) {
+      abilities.forEach(a=>{
+        const el = document.createElement('div'); el.className='ability-block';
+        el.innerHTML = `
+          <div style="font-weight:700">${a.abbr}</div>
+          <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="${a.id}" value="10">
+          <div>Mod: <span class="ability-mod">+0</span></div>
+        `;
+        abilitiesGrid.appendChild(el);
+      });
+    }
+
+    // Build saves — only if empty
+    const savesList = document.getElementById('saves-list');
+    if (savesList && savesList.children.length === 0) {
+      abilities.forEach(a=>{
+        const row = document.createElement('div'); row.className='row'; row.style.alignItems='center';
+        row.innerHTML = `
+          <div style="width:36px"><div class="skill-proficiency" data-skill="${a.id}-save" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1;font-weight:700">${a.abbr} Save</div>
+          <div style="width:48px;text-align:right;font-weight:700" id="${a.id}-save-mod">+0</div>
+        `;
+        savesList.appendChild(row);
+      });
+    }
+
+    // Build skills — only if empty
+    const skillsList = document.getElementById('skills-list');
+    if (skillsList && skillsList.children.length === 0) {
+      skills.forEach(s=>{
+        const row = document.createElement('div'); row.className='row'; row.style.alignItems='center';
+        row.innerHTML = `
+          <div style="width:36px"><div class="skill-proficiency" data-skill="${s.id}" data-pro="0" title="Click to cycle: none/half/full/expert">–</div></div>
+          <div style="flex:1">${s.label} <span style="font-size:.8rem;color:rgba(0,0,0,0.45);">(${s.ability.toUpperCase()})</span></div>
+          <div style="width:48px;text-align:right;font-weight:700" id="${s.id}-mod">+0</div>
+        `;
+        skillsList.appendChild(row);
+      });
+    }
+
+    // cycle proficiency (0 none,1 half,2 full,3 expertise)
+    function cyclePro(el){
+      const cur = parseInt(el.getAttribute('data-pro')||'0');
+      const next = (cur+1)%4;
+      el.setAttribute('data-pro',next);
+      const icons = ['','½','●','★'];
+      el.textContent = icons[next] || '';
+      updateModifiers();
+    }
+    document.addEventListener('click', (e)=>{
+      const el = e.target.closest('.skill-proficiency');
+      if(el) cyclePro(el);
+    });
+
+    // mod calculation
+    function calcMod(score){ return Math.floor((score-10)/2); }
+
+    function updateModifiers(){
+      const prof = parseInt(document.getElementById('proficiency-bonus').value)||0;
+      // abilities
+      document.querySelectorAll('.ability-score').forEach(inp=>{
+        const score = parseInt(inp.value)||0;
+        const mod = calcMod(score);
+        inp.parentElement.querySelector('.ability-mod').textContent = (mod>=0?'+':'')+mod;
+      });
+
+      // saves
+      abilities.forEach(a=>{
+        const base = calcMod(parseInt(document.querySelector(`.ability-score[data-ability="${a.id}"]`).value||10));
+        const protEl = document.querySelector(`.skill-proficiency[data-skill="${a.id}-save"]`);
+        const level = parseInt(protEl.getAttribute('data-pro')||0);
+        let add = 0; if(level===1) add = Math.ceil(prof/2); if(level===2) add = prof; if(level===3) add = prof*2;
+        document.getElementById(`${a.id}-save-mod`).textContent = (base+add>=0?'+':'')+(base+add);
+      });
+
+      // skills
+      skills.forEach(s=>{
+        const base = calcMod(parseInt(document.querySelector(`.ability-score[data-ability="${s.ability}"]`).value||10));
+        const protEl = document.querySelector(`.skill-proficiency[data-skill="${s.id}"]`);
+        const level = parseInt(protEl.getAttribute('data-pro')||0);
+        let add = 0; if(level===1) add = Math.ceil(prof/2); if(level===2) add = prof; if(level===3) add = prof*2;
+        document.getElementById(`${s.id}-mod`).textContent = (base+add>=0?'+':'')+(base+add);
+      });
+
+      // passives
+      const perBase = calcMod(parseInt(document.querySelector('.ability-score[data-ability="wis"]').value||10));
+      const perProt = parseInt(document.querySelector(`.skill-proficiency[data-skill="perception"]`).getAttribute('data-pro')||0);
+      let perAdd = 0; if(perProt===1) perAdd=Math.ceil(prof/2); if(perProt===2) perAdd=prof; if(perProt===3) perAdd=prof*2;
+      document.getElementById('passive-perception').value = 10 + perBase + perAdd;
+
+      const invBase = calcMod(parseInt(document.querySelector('.ability-score[data-ability="int"]').value||10));
+      const invProt = parseInt(document.querySelector(`.skill-proficiency[data-skill="investigation"]`).getAttribute('data-pro')||0);
+      let invAdd = 0; if(invProt===1) invAdd=Math.ceil(prof/2); if(invProt===2) invAdd=prof; if(invProt===3) invAdd=prof*2;
+      document.getElementById('passive-investigation').value = 10 + invBase + invAdd;
+
+      // spellcasting
+      const spellAbility = document.getElementById('spellcasting-ability').value;
+      const spellMod = calcMod(parseInt(document.querySelector(`.ability-score[data-ability="${spellAbility}"]`).value||10));
+      document.getElementById('spell-save-dc').value = 8 + prof + spellMod;
+      document.getElementById('spell-attack-bonus').value = prof + spellMod;
+    }
+
+    document.addEventListener('input', (e)=>{
+      if(e.target && (e.target.classList.contains('ability-score') || e.target.id==='proficiency-bonus' || e.target.id==='spellcasting-ability')) updateModifiers();
+    });
+
+    // --- Dynamic lists: weapons, armor, spells, items ---
+    function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',notes:''}){
+      const wrapper = document.createElement('div'); wrapper.className='list-item';
+      wrapper.innerHTML = `
+        <div class="row">
+          <input class="dnd-input" placeholder="Weapon Name" value="${escapeHtml(data.name)}">
+          <input class="dnd-input" placeholder="Attack bonus" value="${escapeHtml(data.attack)}">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Damage" value="${escapeHtml(data.damage)}">
+          <input class="dnd-input" placeholder="Range / Properties" value="${escapeHtml(data.notes)}">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><i data-feather="trash-2"></i></button>
+        </div>
+      `;
+      return wrapper;
+    }
+
+    function addWeapon(){ const node=createWeaponNode(); document.getElementById('weapons-list').appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    function createArmorNode(data={name:'New Armor',ac:'10',type:'Light',stealth:'-',weight:''}){
+      const wrapper=document.createElement('div'); wrapper.className='list-item';
+      wrapper.innerHTML = `
+        <div class="row">
+          <input class="dnd-input" placeholder="Armor Name" value="${escapeHtml(data.name)}">
+          <input class="dnd-input" placeholder="AC" value="${escapeHtml(data.ac)}">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Type" value="${escapeHtml(data.type)}">
+          <input class="dnd-input" placeholder="Stealth" value="${escapeHtml(data.stealth)}">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><i data-feather="trash-2"></i></button>
+        </div>
+      `;
+      return wrapper;
+    }
+    function addArmor(){ const node=createArmorNode(); document.getElementById('armor-list').appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    function createSpellNode(type,data={name:'New Spell',level:'0',range:'',duration:'',desc:''}){
+      const wrapper=document.createElement('div'); wrapper.className='list-item';
+      const levelSelect = `<select class="dnd-input spell-level" style="width:100px">
+        <option value="0">0 (Cantrip)</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+      </select>`;
+
+      wrapper.innerHTML = `
+        <div class="row">
+          <input class="dnd-input spell-name" placeholder="Spell Name" value="${escapeHtml(data.name)}">
+          ${levelSelect}
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Range" value="${escapeHtml(data.range)}">
+          <input class="dnd-input" placeholder="Duration" value="${escapeHtml(data.duration)}">
+        </div>
+        <textarea class="dnd-input" placeholder="Description">${escapeHtml(data.desc)}</textarea>
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <button class="small-btn" onclick="selectSpell(this)" title="Open in detail">Open</button>
+          </div>
+          <div>
+            <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><i data-feather="trash-2"></i></button>
+          </div>
+        </div>
+      `;
+      return wrapper;
+    }
+
+    function addSpell(type){ const target=(type==='cantrip')?'cantrips-list':'prepared-spells-list'; const node=createSpellNode(type); document.getElementById(target).appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    function selectSpell(btn){ const li=btn.closest('.list-item'); document.getElementById('spell-description').value = li.querySelector('.spell-name').value + "\n\n" + li.querySelector('textarea').value; li.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    function createItemNode(data={name:'Item',qty:1,weight:''}){
+      const wrapper=document.createElement('div'); wrapper.className='list-item';
+      wrapper.innerHTML = `
+        <div class="row">
+          <input class="dnd-input" placeholder="Item Name" value="${escapeHtml(data.name)}">
+          <input class="dnd-input" placeholder="Quantity" value="${escapeHtml(data.qty)}">
+        </div>
+        <div class="row">
+          <input class="dnd-input" placeholder="Weight" value="${escapeHtml(data.weight)}">
+          <input class="dnd-input" placeholder="Notes">
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()" title="Remove"><i data-feather="trash-2"></i></button>
+        </div>
+      `;
+      return wrapper;
+    }
+
+    function addItem(bucket){ const node=createItemNode(); if(bucket==='equipped') document.getElementById('equipped-items-list').appendChild(node); else if(bucket==='backpack') document.getElementById('backpack-items-list').appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    function addContainer(){ const wrapper=document.createElement('div'); wrapper.className='list-item'; wrapper.innerHTML=`
+      <div class="row"><input class="dnd-input" placeholder="Container Name" value="New Container"></div>
+      <div class="row"><div class="list-stack container-contents"></div></div>
+      <div class="row" style="justify-content:space-between"><button class="small-btn" onclick="addItemToContainer(this)"><i data-feather="plus"></i> Add Item</button><button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()"><i data-feather="trash-2"></i></button></div>
+    `; document.getElementById('other-containers-list').appendChild(wrapper); feather.replace(); wrapper.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    function addItemToContainer(btn){ const stack = btn.closest('.list-item').querySelector('.container-contents'); const node=createItemNode(); stack.appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    // portrait helpers: try to handle Imgur page URLs by guessing direct link
+    function applyPortraitUrl(){
+      const url = document.getElementById('portrait-url').value.trim();
+      if(!url) return;
+      // helper to test an image URL
+      function testAndSet(u){
+        const img = new Image(); img.crossOrigin='anonymous'; img.onload = ()=>{document.getElementById('character-portrait').src = u};
+        img.onerror = ()=>{}; img.src = u;
+      }
+
+      // If it's an Imgur page link (not direct to image), try to guess the direct image
+      try{
+        const lower = url.toLowerCase();
+        if(lower.includes('imgur.com') && !lower.match(/\.(jpg|jpeg|png|gif|webp)(\?|$)/i)){
+          // get the id
+          const id = url.split('/').pop().split('?')[0];
+          const guesses = [`https://i.imgur.com/${id}.png`,`https://i.imgur.com/${id}.jpg`,`https://i.imgur.com/${id}.gif`];
+          let tried = 0;
+          function tryNext(){ if(tried>=guesses.length){ document.getElementById('character-portrait').src = url; return;} const g=guesses[tried++]; const i=new Image(); i.crossOrigin='anonymous'; i.onload=()=>{document.getElementById('character-portrait').src=g}; i.onerror=()=>tryNext(); i.src=g; }
+          tryNext();
+        } else {
+          // normal url
+          const i = new Image(); i.crossOrigin='anonymous'; i.onload=()=>{document.getElementById('character-portrait').src=url}; i.onerror=()=>{document.getElementById('character-portrait').src=url}; i.src=url;
+        }
+      }catch(e){document.getElementById('character-portrait').src = url}
+    }
+
+    function updatePortrait(input){ if(input.files && input.files[0]){ const reader=new FileReader(); reader.onload=e=>document.getElementById('character-portrait').src=e.target.result; reader.readAsDataURL(input.files[0]); }}
+
+    // escape helper
+    function escapeHtml(unsafe){ return String(unsafe).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+    // Save function — unchanged except now it won't cause duplication in re-opened file because build steps are guarded above
+    function saveCharacterSheet(){ const htmlContent='<!doctype html>\n'+document.documentElement.outerHTML; const blob=new Blob([htmlContent],{type:'text/html'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; const name=document.getElementById('character-name').value||'character'; a.download=name.replace(/\s+/g,'_')+'_sheet.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
+
+    // initial seeding — only seed empty lists (prevents duplication when a serialized page with appended nodes runs the script again)
+    function seed(){
+      if(document.getElementById('weapons-list').children.length === 0) addWeapon();
+      if(document.getElementById('armor-list').children.length === 0) addArmor();
+      if(document.getElementById('equipped-items-list').children.length === 0) addItem('equipped');
+      if(document.getElementById('backpack-items-list').children.length === 0) addItem('backpack');
+      if(document.getElementById('cantrips-list').children.length === 0) addSpell('cantrip');
+      if(document.getElementById('prepared-spells-list').children.length === 0) addSpell('prepared');
+      if(document.getElementById('other-containers-list').children.length === 0) addContainer();
+      updateModifiers();
+    }
+    seed();
+
+  </script>
+
+
+</body></html>
+
+<footer style="margin-top:2rem; padding:1rem; text-align:center; font-size:0.85rem; color:#555; border-top:1px solid #ccc;">
+  <p>© 2025 Michael Garcia. This character sheet code and design is released for free use.
+  </p>
+  <p>You are free to share and adapt this sheet with credit. This project is a fan-made tool and is not affiliated with or endorsed by Wizards of the Coast.</p>
+</footer>
