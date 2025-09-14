@@ -79,13 +79,15 @@
   <div class="container">
     <header class="text-center">
       <h1 style="font-family:'Cinzel',serif;font-size:28px;margin:0;color:var(--accent)">Dungeons & Dragons — Character Sheet</h1>
-      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.55)">Restored inventory, spells, weapons, armor — with fixes and improved styling.</p>
+      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Mike's HTML character sheet V1.0</p>
+	  <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Make your changes, click save, and open the new file in a browser.</p>
+	  <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Feel free to check out my website to read my fantasy book series.</p>
     </header>
 
     <!-- CHARACTER INFO -->
     <section id="char-info" class="sheet-section grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="row items-start">
-        <div class="portrait" id="portrait-box"><img id="character-portrait" src="https://placekitten.com/300/300" alt="portrait"></div>
+        <div class="portrait" id="portrait-box"><img id="character-portrait" src="" alt="portrait"></div>
         <div style="flex:1">
           <div class="col">
             <input id="character-name" class="dnd-input text-2xl font-bold" placeholder="Character Name">
@@ -120,7 +122,7 @@
           </div>
           <input id="character-hit-dice" class="dnd-input" placeholder="Hit Dice">
           <div class="row" style="align-items:center">
-            <input id="portrait-url" class="dnd-input" placeholder="Portrait image URL (works with Imgur links)">
+            <input id="portrait-url" class="dnd-input" placeholder="Portrait image URL">
             <button class="small-btn" onclick="applyPortraitUrl()">Apply</button>
           </div>
           <input id="portrait-input" type="file" accept="image/*" class="mt-1" onchange="updatePortrait(this)">
@@ -609,4 +611,13 @@ if(document.getElementById('prepared-spells-list').children.length===0) addSpell
 updateModifiers();
 </script>
 </body>
+
+<footer style="margin-top:2rem; padding:1rem; text-align:center; font-size:0.85rem; color:#555; border-top:1px solid #ccc;">
+  <p>© 2025 Michael Garcia. This character sheet code and design is released for free use under the
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">Creative Commons Attribution 4.0 License</a>.
+  </p>
+  <p>You are free to share and adapt this sheet with credit. This project is a fan-made tool and is not affiliated with or endorsed by Wizards of the Coast.</p>
+</footer>
+
+
 </html>
