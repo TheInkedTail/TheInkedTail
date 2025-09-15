@@ -78,6 +78,9 @@
       .label-row{flex-direction:column;align-items:stretch}
       .label-row .label-col{width:auto;flex:unset}
     }
+
+    /* Expandable textarea tweaks */
+    textarea.expandable{overflow:hidden;resize:vertical;min-height:40px}
   </style>
 </head>
 <body>
@@ -519,6 +522,7 @@ function annotateFieldsAndAutosize(){
     // skip if element already has a .field-title immediately before it, or a real <label>
     const prev = el.previousElementSibling;
     if(prev && (prev.classList && prev.classList.contains('field-title') || prev.tagName === 'LABEL')) {
+      // if previous is field-title but empty, fill it
       if(prev.classList && prev.classList.contains('field-title') && !prev.textContent.trim()){
         prev.textContent = el.getAttribute('placeholder') || '';
       }
@@ -577,6 +581,28 @@ function annotateFieldsAndAutosize(){
   });
 }
 
+/* ========== NEW: Expandable textarea binding ========== */
+/* Targets textareas with class "expandable" and auto-resizes them to fit content */
+function autoExpandTextarea(el){
+  if(!el) return;
+  // reset height to allow shrink
+  el.style.height = 'auto';
+  // add small offset to avoid scrollbar appearing
+  const newHeight = Math.max(el.scrollHeight, 40);
+  el.style.height = newHeight + 'px';
+}
+function bindExpandableTextareas(root=document){
+  const els = root.querySelectorAll('textarea.expandable');
+  els.forEach(t=>{
+    if(t._expandBound) return;
+    t._expandBound = true;
+    t.style.overflow = 'hidden';
+    t.addEventListener('input', ()=>autoExpandTextarea(t));
+    // initial expand to fit current content
+    setTimeout(()=>autoExpandTextarea(t), 30);
+  });
+}
+/* ===================================================== */
 
 // --- Weapons / Armor / Spells (re-usable create/add functions) ---
 function escapeHtml(unsafe){ return String(unsafe).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;'); }
@@ -584,7 +610,7 @@ function escapeHtml(unsafe){ return String(unsafe).replace(/&/g,'&amp;').replace
 function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',range:'',notes:''}){
   const wrapper=document.createElement('div'); wrapper.className='list-item';
   wrapper.innerHTML = `<div class="row">
-      <div style="flex:1"><input class="dnd-input" placeholder="Weapon Name" value="${escapeHtml(data.name)}"></div>
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Weapon Name">${escapeHtml(data.name)}</textarea></div>
       <div style="width:120px"><input class="dnd-input" placeholder="Attack bonus" value="${escapeHtml(data.attack)}"></div>
     </div>
     <div class="row">
@@ -592,18 +618,20 @@ function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',range
       <div style="width:160px"><input class="dnd-input" placeholder="Range / Properties" value="${escapeHtml(data.range)}"></div>
     </div>
     <div class="row">
-      <div style="flex:1"><input class="dnd-input" placeholder="Notes" value="${escapeHtml(data.notes)}"></div>
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Notes">${escapeHtml(data.notes)}</textarea></div>
       <div style="width:60px;text-align:right"><button class="small-btn trash-btn" title="Remove weapon"><i data-feather="trash-2"></i></button></div>
     </div>`;
   const remove = wrapper.querySelector('.trash-btn'); remove.addEventListener('click', ()=>wrapper.remove());
+  // ensure newly-created textareas get bound
+  bindExpandableTextareas(wrapper);
   return wrapper;
 }
-function addWeapon(){ const node=createWeaponNode(); document.getElementById('weapons-list').appendChild(node); feather.replace(); annotateFieldsAndAutosize(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addWeapon(){ const node=createWeaponNode(); document.getElementById('weapons-list').appendChild(node); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(node); node.scrollIntoView({behavior:'smooth',block:'center'}); }
 
-function createArmorNode(data={name:'New Armor',ac:'10',type:'Light',stealth:'-',weight:''}){
+function createArmorNode(data={name:'New Armor',ac:'10',type:'Light',stealth:'-',weight:'', notes:''}){
   const wrapper=document.createElement('div'); wrapper.className='list-item';
   wrapper.innerHTML = `<div class="row">
-      <div style="flex:1"><input class="dnd-input" placeholder="Armor Name" value="${escapeHtml(data.name)}"></div>
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Armor Name">${escapeHtml(data.name)}</textarea></div>
       <div style="width:120px"><input class="dnd-input" placeholder="AC" value="${escapeHtml(data.ac)}"></div>
     </div>
     <div class="row">
@@ -613,17 +641,21 @@ function createArmorNode(data={name:'New Armor',ac:'10',type:'Light',stealth:'-'
     <div class="row">
       <div style="flex:1"><input class="dnd-input" placeholder="Weight" value="${escapeHtml(data.weight)}"></div>
       <div style="width:60px;text-align:right"><button class="small-btn trash-btn" title="Remove armor"><i data-feather="trash-2"></i></button></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Notes">${escapeHtml(data.notes)}</textarea></div>
     </div>`;
   const remove = wrapper.querySelector('.trash-btn'); remove.addEventListener('click', ()=>wrapper.remove());
+  bindExpandableTextareas(wrapper);
   return wrapper;
 }
-function addArmor(){ const node=createArmorNode(); document.getElementById('armor-list').appendChild(node); feather.replace(); annotateFieldsAndAutosize(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addArmor(){ const node=createArmorNode(); document.getElementById('armor-list').appendChild(node); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(node); node.scrollIntoView({behavior:'smooth',block:'center'}); }
 
 // SPELLS: switch to tables; create rows for spells
 function createSpellRow(type,data={name:'New Spell',level:'0',range:'',duration:'',desc:''}){
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td><input class="dnd-input spell-name autosize" placeholder="Spell Name" value="${escapeHtml(data.name)}"></td>
+    <td><textarea class="dnd-input spell-name expandable" placeholder="Spell Name">${escapeHtml(data.name)}</textarea></td>
     <td style="width:90px"><select class="dnd-input spell-level"><option value="0">0 (Cantrip)</option>${[1,2,3,4,5,6,7,8,9].map(n=>`<option value="${n}">${n}</option>`).join('')}</select></td>
     <td style="width:120px"><input class="dnd-input" placeholder="Range" value="${escapeHtml(data.range)}"></td>
     <td style="width:120px"><input class="dnd-input" placeholder="Duration" value="${escapeHtml(data.duration)}"></td>
@@ -631,9 +663,11 @@ function createSpellRow(type,data={name:'New Spell',level:'0',range:'',duration:
     <td style="width:60px;text-align:right"><button class="small-btn trash-btn">Remove</button></td>
   `;
   const removeBtn = tr.querySelector('.trash-btn'); removeBtn.addEventListener('click', ()=>tr.remove());
+  // bind newly-created expandable textarea
+  bindExpandableTextareas(tr);
   return tr;
 }
-function addSpell(type){ const target = (type==='cantrip')?document.querySelector('#cantrips-table tbody'):document.querySelector('#prepared-table tbody'); const r=createSpellRow(type); target.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); r.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addSpell(type){ const target = (type==='cantrip')?document.querySelector('#cantrips-table tbody'):document.querySelector('#prepared-table tbody'); const r=createSpellRow(type); target.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(r); r.scrollIntoView({behavior:'smooth',block:'center'}); }
 
 // --- PORTRAIT HELPERS ---
 function applyPortraitUrl(){
@@ -669,7 +703,7 @@ function saveCharacterSheet(){
 function createInventoryRow(data = { name: 'Item', qty: 1, weight: '', value: '', description: '' }){
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td><input class="dnd-input" placeholder="Item name" value="${escapeHtml(data.name)}" style="width:100%"></td>
+    <td><textarea class="dnd-input expandable" placeholder="Item name" style="width:100%">${escapeHtml(data.name)}</textarea></td>
     <td style="width:90px"><input class="dnd-input" placeholder="Qty" value="${escapeHtml(data.qty)}" style="width:100%"></td>
     <td style="width:90px"><input class="dnd-input" placeholder="Weight" value="${escapeHtml(data.weight)}" style="width:100%"></td>
     <td style="width:110px"><input class="dnd-input" placeholder="Value" value="${escapeHtml(data.value)}" style="width:100%"></td>
@@ -679,6 +713,8 @@ function createInventoryRow(data = { name: 'Item', qty: 1, weight: '', value: ''
     </td>
   `;
   const removeBtn = tr.querySelector('.trash-btn'); removeBtn.addEventListener('click', ()=>tr.remove());
+  // bind newly-created expandable textarea
+  bindExpandableTextareas(tr);
   return tr;
 }
 
@@ -704,7 +740,7 @@ function createContainerNode(name = 'Container', data = { items: [] }){
 
   const tbody = table.querySelector('tbody');
 
-  addBtn.addEventListener('click', ()=>{ const r=createInventoryRow(); tbody.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); r.scrollIntoView({behavior:'smooth',block:'center'}); });
+  addBtn.addEventListener('click', ()=>{ const r=createInventoryRow(); tbody.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(r); r.scrollIntoView({behavior:'smooth',block:'center'}); });
   renameBtn.addEventListener('click', ()=>{ const newName = prompt('Container name:', h.textContent); if(newName) h.textContent = newName; });
   removeBtn.addEventListener('click', ()=> wrapper.remove());
 
@@ -724,7 +760,7 @@ function promptAddContainer(){
 function addContainer(name, data){
   const container = createContainerNode(name || 'New Container', data || {});
   document.getElementById('inventory-containers').appendChild(container);
-  feather.replace(); annotateFieldsAndAutosize(); container.scrollIntoView({behavior:'smooth',block:'center'});
+  feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(container); container.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 // seed default containers only if empty (prevents duplication when saved page re-runs)
@@ -797,7 +833,7 @@ if(document.querySelector('#prepared-table tbody').children.length===0) addSpell
 seedInventory();
 
 // initialize modifiers and field annotations
-setTimeout(()=>{ annotateFieldsAndAutosize(); updateModifiers(); },120);
+setTimeout(()=>{ annotateFieldsAndAutosize(); bindExpandableTextareas(); updateModifiers(); },120);
 
 // keep feather icons after dynamic additions
 const observer = new MutationObserver(()=>{ feather.replace(); });
