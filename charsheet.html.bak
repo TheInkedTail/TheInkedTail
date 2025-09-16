@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>D&D Character Sheet — Full</title>
+  <title>The Inked Tail - D&D Character Sheet</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
@@ -33,10 +33,13 @@
     .skill-proficiency{width:26px;height:26px;border-radius:6px;border:2px solid var(--accent);display:inline-grid;place-items:center;font-weight:700;cursor:pointer;user-select:none;background:linear-gradient(180deg,#fff,#f4efe2)}
     .skill-proficiency[data-pro="0"]{opacity:0.35}
     .list-stack{display:flex;flex-direction:column;gap:.6rem}
-    .list-item{background:linear-gradient(180deg,#fff,#fbf6ee);border:2px solid rgba(0,0,0,0.06);padding:.6rem;border-radius:8px;display:flex;flex-direction:column;gap:.4rem}
+    .list-item{background:linear-gradient(180deg,#fff,#fbf6ee);border:2px solid rgba(0,0,0,0.06);Padding:.6rem;border-radius:8px;display:flex;flex-direction:column;gap:.4rem}
     .small-btn{padding:.35rem .6rem;border-radius:6px;background:#efe7d1;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
     .row{display:flex;gap:.6rem;align-items:center}
     .col{display:flex;flex-direction:column;gap:.4rem}
+    .field-title{font-size:0.85rem;color:rgba(0,0,0,0.6);margin-bottom:0.12rem}
+    /* keep inputs looking the same but allow autosizing adjustments */
+    .autosize{transition:font-size .08s linear}
     @media print{
       body{background:white;color:black}
       .topbar{display:none}
@@ -56,6 +59,28 @@
     .notes{display:none;margin-top:.3rem;padding:.3rem;border:1px dashed var(--border);background:#faf7f0}
     .notes-open{display:block}
     .notes-btn{cursor:pointer;font-size:0.85rem;color:var(--accent);text-decoration:underline;background:none;border:none;padding:0}
+    /* Spell tables */
+    .spell-table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:0.95rem}
+    .spell-table th,.spell-table td{border:1px solid var(--border);padding:.4rem;text-align:left;background:transparent;vertical-align:top}
+    .spell-table th{background:linear-gradient(180deg,#efe0bb,#e0d4b7);font-weight:700}
+    .spell-desc{width:100%;min-height:60px}
+    /* Spellcasting row tweaks to keep remove button inside bounds */
+    .spellcasting-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem}
+    .spellcasting-row > div{min-width:0}
+    .spellcasting-row .control-group{display:flex;gap:.4rem;align-items:center}
+    .remove-casting{padding:.3rem .5rem}
+
+    /* New helper for vertical label-input rows used in Currency/Encumbrance */
+    .label-row{display:flex;align-items:center;gap:0.6rem}
+    .label-row .label-col{width:72px;flex:0 0 72px}
+    .label-row .input-col{flex:1}
+    @media (max-width:640px){
+      .label-row{flex-direction:column;align-items:stretch}
+      .label-row .label-col{width:auto;flex:unset}
+    }
+
+    /* Expandable textarea tweaks */
+    textarea.expandable{overflow:hidden;resize:vertical;min-height:40px}
   </style>
 </head>
 <body>
@@ -68,7 +93,7 @@
         <a href="#spells">Spells</a>
         <a href="#inventory">Inventory</a>
         <a href="#details">Details</a>
-		<a href="https://www.theinkedtail.com" target="_blank">Mike's Website</a>
+        <a href="https://www.theinkedtail.com" target="_blank">Mike's Website</a>
       </nav>
       <div class="flex gap-2">
         <button class="btn" onclick="saveCharacterSheet()"><i data-feather="save"></i> Save</button>
@@ -79,9 +104,9 @@
   <div class="container">
     <header class="text-center">
       <h1 style="font-family:'Cinzel',serif;font-size:28px;margin:0;color:var(--accent)">Dungeons & Dragons — Character Sheet</h1>
-      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Mike's HTML character sheet V1.0</p>
-	  <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Make your changes, click save, and open the new file in a browser.</p>
-	  <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Feel free to check out my website to read my fantasy book series.</p>
+      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Mike's HTML character sheet V1.1</p>
+      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Make your changes, click save, and open the new file in a browser.</p>
+      <p style="margin:.2rem 0 .8rem;color:rgba(0,0,0,0.85)">Feel free to check out my website to read my fantasy book series.</p>
     </header>
 
     <!-- CHARACTER INFO -->
@@ -90,12 +115,27 @@
         <div class="portrait" id="portrait-box"><img id="character-portrait" src="" alt="portrait"></div>
         <div style="flex:1">
           <div class="col">
-            <input id="character-name" class="dnd-input text-2xl font-bold" placeholder="Character Name">
+            <div>
+              <div class="field-title">Character Name</div>
+              <input id="character-name" class="dnd-input text-2xl font-bold autosize" placeholder="Character Name">
+            </div>
             <div class="grid grid-cols-2 gap-2">
-              <input id="character-class" class="dnd-input" placeholder="Class & Level">
-              <input id="character-race" class="dnd-input" placeholder="Race">
-              <input id="player-name" class="dnd-input" placeholder="Player">
-              <input id="character-background" class="dnd-input" placeholder="Background">
+              <div>
+                <div class="field-title">Class & Level</div>
+                <input id="character-class" class="dnd-input autosize" placeholder="Class & Level">
+              </div>
+              <div>
+                <div class="field-title">Race</div>
+                <input id="character-race" class="dnd-input autosize" placeholder="Race">
+              </div>
+              <div>
+                <div class="field-title">Player</div>
+                <input id="player-name" class="dnd-input autosize" placeholder="Player">
+              </div>
+              <div>
+                <div class="field-title">Background</div>
+                <input id="character-background" class="dnd-input autosize" placeholder="Background">
+              </div>
             </div>
           </div>
         </div>
@@ -104,12 +144,30 @@
       <div>
         <div class="col">
           <div class="grid grid-cols-2 gap-2">
-            <input id="character-alignment" class="dnd-input" placeholder="Alignment">
-            <input id="character-xp" class="dnd-input" type="number" placeholder="XP">
-            <input id="character-ac" class="dnd-input" type="number" placeholder="AC">
-            <input id="character-initiative" class="dnd-input" type="number" placeholder="Initiative">
-            <input id="character-speed" class="dnd-input" placeholder="Speed">
-            <input id="proficiency-bonus" class="dnd-input" type="number" value="2" placeholder="Proficiency">
+            <div>
+              <div class="field-title">Alignment</div>
+              <input id="character-alignment" class="dnd-input autosize" placeholder="Alignment">
+            </div>
+            <div>
+              <div class="field-title">XP</div>
+              <input id="character-xp" class="dnd-input autosize" type="number" placeholder="XP">
+            </div>
+            <div>
+              <div class="field-title">AC</div>
+              <input id="character-ac" class="dnd-input autosize" type="number" placeholder="AC">
+            </div>
+            <div>
+              <div class="field-title">Initiative</div>
+              <input id="character-initiative" class="dnd-input autosize" type="number" placeholder="Initiative">
+            </div>
+            <div>
+              <div class="field-title">Speed</div>
+              <input id="character-speed" class="dnd-input autosize" placeholder="Speed">
+            </div>
+            <div>
+              <div class="field-title">Proficiency</div>
+              <input id="proficiency-bonus" class="dnd-input autosize" type="number" value="2" placeholder="Proficiency">
+            </div>
           </div>
         </div>
       </div>
@@ -117,12 +175,24 @@
       <div>
         <div class="col">
           <div class="row">
-            <input id="character-hp-current" class="dnd-input" type="number" placeholder="Current HP">
-            <input id="character-hp-max" class="dnd-input" type="number" placeholder="Max HP">
+            <div style="flex:1">
+              <div class="field-title">Current HP</div>
+              <input id="character-hp-current" class="dnd-input autosize" type="number" placeholder="Current HP">
+            </div>
+            <div style="flex:1">
+              <div class="field-title">Max HP</div>
+              <input id="character-hp-max" class="dnd-input autosize" type="number" placeholder="Max HP">
+            </div>
           </div>
-          <input id="character-hit-dice" class="dnd-input" placeholder="Hit Dice">
+          <div>
+            <div class="field-title">Hit Dice</div>
+            <input id="character-hit-dice" class="dnd-input autosize" placeholder="Hit Dice">
+          </div>
           <div class="row" style="align-items:center">
-            <input id="portrait-url" class="dnd-input" placeholder="Portrait image URL">
+            <div style="flex:1">
+              <div class="field-title">Portrait image URL</div>
+              <input id="portrait-url" class="dnd-input autosize" placeholder="Portrait image URL">
+            </div>
             <button class="small-btn" onclick="applyPortraitUrl()">Apply</button>
           </div>
           <input id="portrait-input" type="file" accept="image/*" class="mt-1" onchange="updatePortrait(this)">
@@ -163,9 +233,9 @@
       <div>
         <h3 class="font-bold">Features & Traits</h3>
         <label class="text-sm mt-1">Class Features</label>
-        <textarea id="class-features" class="dnd-input w-full h-28"></textarea>
+        <textarea id="class-features" class="dnd-input w-full h-28" placeholder="Class Features"></textarea>
         <label class="text-sm mt-2">Racial Traits</label>
-        <textarea id="racial-traits" class="dnd-input w-full h-20"></textarea>
+        <textarea id="racial-traits" class="dnd-input w-full h-20" placeholder="Racial Traits"></textarea>
       </div>
 
       <div id="combat">
@@ -192,45 +262,22 @@
     <!-- SPELLS -->
     <section id="spells" class="sheet-section">
       <h3 class="font-bold">Spells</h3>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
-        <div>
-          <label class="text-sm">Spellcasting Ability</label>
-          <select id="spellcasting-ability" class="dnd-input w-full">
-            <option value="int">Intelligence</option>
-            <option value="wis">Wisdom</option>
-            <option value="cha">Charisma</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-sm">Spell Save DC</label>
-          <input id="spell-save-dc" class="dnd-input w-full" readonly>
-        </div>
-        <div>
-          <label class="text-sm">Spell Attack Bonus</label>
-          <input id="spell-attack-bonus" class="dnd-input w-full" readonly>
-        </div>
-        <div>
-          <label class="text-sm">Search</label>
-          <input id="spell-filter" class="dnd-input w-full" placeholder="Filter spells by name..." oninput="renderSpells()">
-        </div>
+      <div class="grid grid-cols-1 gap-2 mt-2">
+        <div id="spellcasting-list"></div>
+        <div style="margin-top:.5rem"><button class="small-btn" id="add-casting-btn">+ Add Casting Ability</button></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div>
           <h4 class="font-semibold">Cantrips</h4>
-          <div id="cantrips-list" class="list-stack mt-2"></div>
+          <table id="cantrips-table" class="spell-table"><thead><tr><th>Name</th><th>Level</th><th>Range</th><th>Duration</th><th>Description</th><th></th></tr></thead><tbody></tbody></table>
           <div class="mt-2"><button class="small-btn" onclick="addSpell('cantrip')"><i data-feather="plus"></i> Add Cantrip</button></div>
         </div>
 
         <div>
           <h4 class="font-semibold">Prepared Spells</h4>
-          <div id="prepared-spells-list" class="list-stack mt-2"></div>
+          <table id="prepared-table" class="spell-table"><thead><tr><th>Name</th><th>Level</th><th>Range</th><th>Duration</th><th>Description</th><th></th></tr></thead><tbody></tbody></table>
           <div class="mt-2"><button class="small-btn" onclick="addSpell('prepared')"><i data-feather="plus"></i> Add Spell</button></div>
-        </div>
-
-        <div>
-          <h4 class="font-semibold">Spell Details</h4>
-          <textarea id="spell-description" class="dnd-input w-full h-40" placeholder="Select a spell to view or edit its full description"></textarea>
         </div>
       </div>
     </section>
@@ -251,25 +298,60 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div>
           <h4 class="font-semibold">Currency</h4>
-          <div class="grid grid-cols-5 gap-2 mt-2">
-            <input id="currency-cp" class="dnd-input" placeholder="CP" type="number">
-            <input id="currency-sp" class="dnd-input" placeholder="SP" type="number">
-            <input id="currency-ep" class="dnd-input" placeholder="EP" type="number">
-            <input id="currency-gp" class="dnd-input" placeholder="GP" type="number">
-            <input id="currency-pp" class="dnd-input" placeholder="PP" type="number">
+
+          <!-- Vertical stacked label rows with title on the left -->
+          <div class="mt-2 space-y-2">
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">CP</div></div>
+              <div class="input-col"><input id="currency-cp" class="dnd-input autosize" placeholder="CP" type="number"></div>
+            </div>
+
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">SP</div></div>
+              <div class="input-col"><input id="currency-sp" class="dnd-input autosize" placeholder="SP" type="number"></div>
+            </div>
+
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">EP</div></div>
+              <div class="input-col"><input id="currency-ep" class="dnd-input autosize" placeholder="EP" type="number"></div>
+            </div>
+
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">GP</div></div>
+              <div class="input-col"><input id="currency-gp" class="dnd-input autosize" placeholder="GP" type="number"></div>
+            </div>
+
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">PP</div></div>
+              <div class="input-col"><input id="currency-pp" class="dnd-input autosize" placeholder="PP" type="number"></div>
+            </div>
           </div>
         </div>
+
         <div>
           <h4 class="font-semibold">Encumbrance</h4>
-          <div class="grid grid-cols-3 gap-2 mt-2">
-            <input id="carried-weight" class="dnd-input" placeholder="Carried" type="number">
-            <input id="max-capacity" class="dnd-input" placeholder="Max" type="number">
-            <input id="encumbrance-status" class="dnd-input" placeholder="Status" readonly>
+
+          <!-- Vertical stacked label rows with title on the left -->
+          <div class="mt-2 space-y-2">
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">Carried</div></div>
+              <div class="input-col"><input id="carried-weight" class="dnd-input autosize" placeholder="Carried" type="number"></div>
+            </div>
+
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">Max</div></div>
+              <div class="input-col"><input id="max-capacity" class="dnd-input autosize" placeholder="Max" type="number"></div>
+            </div>
+
+            <div class="label-row">
+              <div class="label-col"><div class="field-title">Status</div></div>
+              <div class="input-col"><input id="encumbrance-status" class="dnd-input autosize" placeholder="Status" readonly></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Notes modal hidden until used -->
+      <!-- Notes modal hidden until used (kept for backward compat but inventory now uses inline description box) -->
       <div id="item-notes-modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:120;">
         <div style="background:var(--paper);border:3px solid var(--border);padding:1rem;border-radius:8px;max-width:700px;width:94%;box-shadow:0 10px 30px rgba(0,0,0,0.25);">
           <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -294,24 +376,24 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
         <div>
           <label class="text-sm">Appearance</label>
-          <textarea id="character-appearance" class="dnd-input w-full h-40"></textarea>
+          <textarea id="character-appearance" class="dnd-input w-full h-40" placeholder="Appearance"></textarea>
         </div>
         <div>
           <label class="text-sm">Backstory</label>
-          <textarea id="character-backstory" class="dnd-input w-full h-40"></textarea>
+          <textarea id="character-backstory" class="dnd-input w-full h-40" placeholder="Backstory"></textarea>
         </div>
         <div>
           <label class="text-sm">Vitals</label>
           <div class="grid grid-cols-2 gap-2 mt-1">
-            <input id="detail-height" class="dnd-input" placeholder="Height">
-            <input id="detail-weight" class="dnd-input" placeholder="Weight">
-            <input id="detail-age" class="dnd-input" placeholder="Age">
-            <input id="detail-eyes" class="dnd-input" placeholder="Eyes">
-            <input id="detail-skin" class="dnd-input" placeholder="Skin">
-            <input id="detail-hair" class="dnd-input" placeholder="Hair">
+            <input id="detail-height" class="dnd-input autosize" placeholder="Height">
+            <input id="detail-weight" class="dnd-input autosize" placeholder="Weight">
+            <input id="detail-age" class="dnd-input autosize" placeholder="Age">
+            <input id="detail-eyes" class="dnd-input autosize" placeholder="Eyes">
+            <input id="detail-skin" class="dnd-input autosize" placeholder="Skin">
+            <input id="detail-hair" class="dnd-input autosize" placeholder="Hair">
           </div>
           <label class="text-sm mt-2">Allies & Organizations</label>
-          <textarea id="character-allies" class="dnd-input w-full h-24"></textarea>
+          <textarea id="character-allies" class="dnd-input w-full h-24" placeholder="Allies & Organizations"></textarea>
         </div>
       </div>
     </section>
@@ -344,7 +426,7 @@ if (abilitiesGrid && abilitiesGrid.children.length === 0) {
   abilities.forEach(a=>{
     const el = document.createElement('div'); el.className='ability-block';
     el.innerHTML = `<div style="font-weight:700">${a.abbr}</div>
-      <input type="number" min="1" max="30" class="dnd-input ability-score text-center" data-ability="${a.id}" value="10">
+      <input type="number" min="1" max="30" class="dnd-input ability-score text-center autosize" data-ability="${a.id}" value="10">
       <div>Mod: <span class="ability-mod">+0</span></div>`;
     abilitiesGrid.appendChild(el);
   });
@@ -414,45 +496,178 @@ function updateModifiers(){
   let invAdd=0; if(invProt===1) invAdd=Math.ceil(prof/2); if(invProt===2) invAdd=prof; if(invProt===3) invAdd=prof*2;
   document.getElementById('passive-investigation').value = 10 + invBase + invAdd;
 
-  const spellAbility = document.getElementById('spellcasting-ability').value;
-  const spellMod = calcMod(parseInt(document.querySelector(`.ability-score[data-ability="${spellAbility}"]`).value||10));
-  document.getElementById('spell-save-dc').value = 8 + prof + spellMod;
-  document.getElementById('spell-attack-bonus').value = prof + spellMod;
+  // update all spellcasting rows
+  document.querySelectorAll('.spellcasting-row').forEach(row=>{
+    const spellAbility = row.querySelector('.spellcasting-select').value;
+    const spellMod = calcMod(parseInt(document.querySelector(`.ability-score[data-ability="${spellAbility}"]`).value||10));
+    const saveEl = row.querySelector('.spell-save-dc');
+    const atkEl = row.querySelector('.spell-attack-bonus');
+    if(saveEl) saveEl.value = 8 + prof + spellMod;
+    if(atkEl) atkEl.value = (prof + spellMod >= 0 ? '+' : '') + (prof + spellMod);
+  });
 }
-document.addEventListener('input',(e)=>{ if(e.target && (e.target.classList.contains('ability-score')||e.target.id==='proficiency-bonus'||e.target.id==='spellcasting-ability')) updateModifiers(); });
+document.addEventListener('input',(e)=>{ if(e.target && (e.target.classList.contains('ability-score')||e.target.id==='proficiency-bonus')) updateModifiers(); });
+
+// --- Field titles (show placeholder next to fields) and autosize behavior ---
+// Reworked: insert a .field-title immediately before each input/textarea that needs one.
+// Skip insertion when an immediate preceding sibling is a <label> or already a .field-title.
+// This avoids duplicates and also ensures each field gets its own title (no parent-wide skipping).
+function annotateFieldsAndAutosize(){
+  const selector = 'input[placeholder], textarea[placeholder]';
+  document.querySelectorAll(selector).forEach(el=>{
+    if(!el.parentElement) return;
+    // If field is inside a .label-row or .label-col, we already have a left-hand title — skip adding another.
+    if(el.closest('.label-row') || el.closest('.label-col')) return;
+
+    // skip if element already has a .field-title immediately before it, or a real <label>
+    const prev = el.previousElementSibling;
+    if(prev && (prev.classList && prev.classList.contains('field-title') || prev.tagName === 'LABEL')) {
+      // if previous is field-title but empty, fill it
+      if(prev.classList && prev.classList.contains('field-title') && !prev.textContent.trim()){
+        prev.textContent = el.getAttribute('placeholder') || '';
+      }
+      return;
+    }
+    // also skip if element is already wrapped by a .field-wrapper we created earlier
+    if(el.closest('.field-wrapper')) return;
+
+    // Insert a field-title immediately before the element.
+    const label = document.createElement('div');
+    label.className = 'field-title';
+    label.textContent = el.getAttribute('placeholder') || '';
+    el.parentElement.insertBefore(label, el);
+  });
+
+  // Remove accidental consecutive field-title nodes (safety)
+  document.querySelectorAll('.field-title').forEach(ft=>{
+    const p = ft.previousElementSibling;
+    if(p && p.classList && p.classList.contains('field-title')){
+      ft.remove();
+    }
+  });
+
+  // Autosize single-line inputs by adjusting font-size to help content fit
+  const singleInputs = document.querySelectorAll('input.dnd-input');
+  singleInputs.forEach(inp=>{
+    if(inp._autosizeBound) return;
+    inp._autosizeBound = true;
+    inp.classList.add('autosize');
+    const fit = ()=>{
+      try{
+        const style = window.getComputedStyle(inp);
+        const tmp = document.createElement('span');
+        tmp.style.visibility='hidden';
+        tmp.style.whiteSpace='pre';
+        tmp.style.font = style.font;
+        tmp.textContent = inp.value || inp.getAttribute('placeholder') || '';
+        document.body.appendChild(tmp);
+        const needed = tmp.clientWidth + 12;
+        document.body.removeChild(tmp);
+        const available = Math.max(20, inp.clientWidth - 10);
+        let fz = parseFloat(style.fontSize) || 16;
+        const min = 10; const max = 22;
+        if(needed > available){
+          const scale = available / needed;
+          const newSize = Math.max(min, Math.min(max, Math.floor(fz * scale)));
+          inp.style.fontSize = newSize + 'px';
+        } else {
+          inp.style.fontSize = '';
+        }
+      }catch(e){}
+    };
+    inp.addEventListener('input', fit);
+    setTimeout(fit,50);
+    window.addEventListener('resize', fit);
+  });
+}
+
+/* ========== NEW: Expandable textarea binding ========== */
+/* Targets textareas with class "expandable" and auto-resizes them to fit content */
+function autoExpandTextarea(el){
+  if(!el) return;
+  // reset height to allow shrink
+  el.style.height = 'auto';
+  // add small offset to avoid scrollbar appearing
+  const newHeight = Math.max(el.scrollHeight, 40);
+  el.style.height = newHeight + 'px';
+}
+function bindExpandableTextareas(root=document){
+  const els = root.querySelectorAll('textarea.expandable');
+  els.forEach(t=>{
+    if(t._expandBound) return;
+    t._expandBound = true;
+    t.style.overflow = 'hidden';
+    t.addEventListener('input', ()=>autoExpandTextarea(t));
+    // initial expand to fit current content
+    setTimeout(()=>autoExpandTextarea(t), 30);
+  });
+}
+/* ===================================================== */
 
 // --- Weapons / Armor / Spells (re-usable create/add functions) ---
-function escapeHtml(unsafe){ return String(unsafe).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+function escapeHtml(unsafe){ return String(unsafe).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;'); }
 
-function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',notes:''}){
+function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',range:'',notes:''}){
   const wrapper=document.createElement('div'); wrapper.className='list-item';
-  wrapper.innerHTML = `<div class="row"><input class="dnd-input" placeholder="Weapon Name" value="${escapeHtml(data.name)}"><input class="dnd-input" placeholder="Attack bonus" value="${escapeHtml(data.attack)}"></div>
-  <div class="row"><input class="dnd-input" placeholder="Damage" value="${escapeHtml(data.damage)}"><input class="dnd-input" placeholder="Range / Properties" value="${escapeHtml(data.notes)}"></div>
-  <div class="row" style="justify-content:flex-end"><button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()"><i data-feather="trash-2"></i></button></div>`;
+  wrapper.innerHTML = `<div class="row">
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Weapon Name">${escapeHtml(data.name)}</textarea></div>
+      <div style="width:120px"><input class="dnd-input" placeholder="Attack bonus" value="${escapeHtml(data.attack)}"></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><input class="dnd-input" placeholder="Damage" value="${escapeHtml(data.damage)}"></div>
+      <div style="width:160px"><input class="dnd-input" placeholder="Range / Properties" value="${escapeHtml(data.range)}"></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Notes">${escapeHtml(data.notes)}</textarea></div>
+      <div style="width:60px;text-align:right"><button class="small-btn trash-btn" title="Remove weapon"><i data-feather="trash-2"></i></button></div>
+    </div>`;
+  const remove = wrapper.querySelector('.trash-btn'); remove.addEventListener('click', ()=>wrapper.remove());
+  // ensure newly-created textareas get bound
+  bindExpandableTextareas(wrapper);
   return wrapper;
 }
-function addWeapon(){ const node=createWeaponNode(); document.getElementById('weapons-list').appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addWeapon(){ const node=createWeaponNode(); document.getElementById('weapons-list').appendChild(node); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(node); node.scrollIntoView({behavior:'smooth',block:'center'}); }
 
-function createArmorNode(data={name:'New Armor',ac:'10',type:'Light',stealth:'-',weight:''}){
+function createArmorNode(data={name:'New Armor',ac:'10',type:'Light',stealth:'-',weight:'', notes:''}){
   const wrapper=document.createElement('div'); wrapper.className='list-item';
-  wrapper.innerHTML = `<div class="row"><input class="dnd-input" placeholder="Armor Name" value="${escapeHtml(data.name)}"><input class="dnd-input" placeholder="AC" value="${escapeHtml(data.ac)}"></div>
-  <div class="row"><input class="dnd-input" placeholder="Type" value="${escapeHtml(data.type)}"><input class="dnd-input" placeholder="Stealth" value="${escapeHtml(data.stealth)}"></div>
-  <div class="row" style="justify-content:flex-end"><button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()"><i data-feather="trash-2"></i></button></div>`;
+  wrapper.innerHTML = `<div class="row">
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Armor Name">${escapeHtml(data.name)}</textarea></div>
+      <div style="width:120px"><input class="dnd-input" placeholder="AC" value="${escapeHtml(data.ac)}"></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><input class="dnd-input" placeholder="Type" value="${escapeHtml(data.type)}"></div>
+      <div style="width:120px"><input class="dnd-input" placeholder="Stealth" value="${escapeHtml(data.stealth)}"></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><input class="dnd-input" placeholder="Weight" value="${escapeHtml(data.weight)}"></div>
+      <div style="width:60px;text-align:right"><button class="small-btn trash-btn" title="Remove armor"><i data-feather="trash-2"></i></button></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><textarea class="dnd-input expandable" placeholder="Notes">${escapeHtml(data.notes)}</textarea></div>
+    </div>`;
+  const remove = wrapper.querySelector('.trash-btn'); remove.addEventListener('click', ()=>wrapper.remove());
+  bindExpandableTextareas(wrapper);
   return wrapper;
 }
-function addArmor(){ const node=createArmorNode(); document.getElementById('armor-list').appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addArmor(){ const node=createArmorNode(); document.getElementById('armor-list').appendChild(node); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(node); node.scrollIntoView({behavior:'smooth',block:'center'}); }
 
-function createSpellNode(type,data={name:'New Spell',level:'0',range:'',duration:'',desc:''}){
-  const wrapper=document.createElement('div'); wrapper.className='list-item';
-  const levelSelect = `<select class="dnd-input spell-level" style="width:100px"><option value="0">0 (Cantrip)</option>${[1,2,3,4,5,6,7,8,9].map(n=>`<option value="${n}">${n}</option>`).join('')}</select>`;
-  wrapper.innerHTML = `<div class="row"><input class="dnd-input spell-name" placeholder="Spell Name" value="${escapeHtml(data.name)}">${levelSelect}</div>
-    <div class="row"><input class="dnd-input" placeholder="Range" value="${escapeHtml(data.range)}"><input class="dnd-input" placeholder="Duration" value="${escapeHtml(data.duration)}"></div>
-    <textarea class="dnd-input" placeholder="Description">${escapeHtml(data.desc)}</textarea>
-    <div class="row" style="justify-content:space-between"><div><button class="small-btn" onclick="selectSpell(this)">Open</button></div><div><button class="small-btn trash-btn" onclick="this.closest('.list-item').remove()"><i data-feather="trash-2"></i></button></div></div>`;
-  return wrapper;
+// SPELLS: switch to tables; create rows for spells
+function createSpellRow(type,data={name:'New Spell',level:'0',range:'',duration:'',desc:''}){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><textarea class="dnd-input spell-name expandable" placeholder="Spell Name">${escapeHtml(data.name)}</textarea></td>
+    <td style="width:90px"><select class="dnd-input spell-level"><option value="0">0 (Cantrip)</option>${[1,2,3,4,5,6,7,8,9].map(n=>`<option value="${n}">${n}</option>`).join('')}</select></td>
+    <td style="width:120px"><input class="dnd-input" placeholder="Range" value="${escapeHtml(data.range)}"></td>
+    <td style="width:120px"><input class="dnd-input" placeholder="Duration" value="${escapeHtml(data.duration)}"></td>
+    <td><textarea class="dnd-input spell-desc" placeholder="Description">${escapeHtml(data.desc)}</textarea></td>
+    <td style="width:60px;text-align:right"><button class="small-btn trash-btn">Remove</button></td>
+  `;
+  const removeBtn = tr.querySelector('.trash-btn'); removeBtn.addEventListener('click', ()=>tr.remove());
+  // bind newly-created expandable textarea
+  bindExpandableTextareas(tr);
+  return tr;
 }
-function addSpell(type){ const target=(type==='cantrip')?'cantrips-list':'prepared-spells-list'; const node=createSpellNode(type); document.getElementById(target).appendChild(node); feather.replace(); node.scrollIntoView({behavior:'smooth',block:'center'}); }
-function selectSpell(btn){ const li=btn.closest('.list-item'); document.getElementById('spell-description').value = li.querySelector('.spell-name').value + "\n\n" + li.querySelector('textarea').value; li.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addSpell(type){ const target = (type==='cantrip')?document.querySelector('#cantrips-table tbody'):document.querySelector('#prepared-table tbody'); const r=createSpellRow(type); target.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(r); r.scrollIntoView({behavior:'smooth',block:'center'}); }
 
 // --- PORTRAIT HELPERS ---
 function applyPortraitUrl(){
@@ -475,6 +690,30 @@ function updatePortrait(input){ if(input.files && input.files[0]){ const reader=
 
 // --- SAVE (download HTML snapshot) ---
 function saveCharacterSheet(){
+  // Sync current values into attributes/text nodes so that serialization preserves edits.
+  // Inputs: set value attribute; checkboxes/radios: set/remove 'checked'
+  // Textareas: write current value into the textarea text content
+  // Selects: mark selected options with 'selected'
+  document.querySelectorAll('input, textarea, select').forEach(el=>{
+    const tag = (el.tagName || '').toLowerCase();
+    if(tag === 'input'){
+      const type = (el.type || '').toLowerCase();
+      if(type === 'checkbox' || type === 'radio'){
+        if(el.checked) el.setAttribute('checked','checked'); else el.removeAttribute('checked');
+      } else {
+        // set value attribute to current value
+        el.setAttribute('value', el.value);
+      }
+    } else if(tag === 'textarea'){
+      // place current value as text content inside the textarea
+      el.textContent = el.value;
+    } else if(tag === 'select'){
+      Array.from(el.options).forEach(opt=>{
+        if(opt.selected) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected');
+      });
+    }
+  });
+
   const htmlContent='<!doctype html>\n'+document.documentElement.outerHTML;
   const blob=new Blob([htmlContent],{type:'text/html'});
   const url=URL.createObjectURL(blob);
@@ -484,49 +723,25 @@ function saveCharacterSheet(){
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
 
-// --- INVENTORY: Table/Containers system ---
-// createInventoryRow: returns a <tr> element with columns Name | Qty | Weight | Value | Notes | Actions
-function createInventoryRow(data = { name: 'Item', qty: 1, weight: '', value: '', notes: '' }){
+// --- INVENTORY: Table/Containers system (Notes -> Description text box) ---
+function createInventoryRow(data = { name: 'Item', qty: 1, weight: '', value: '', description: '' }){
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td><input class="dnd-input" placeholder="Item name" value="${escapeHtml(data.name)}" style="width:100%"></td>
+    <td><textarea class="dnd-input expandable" placeholder="Item name" style="width:100%">${escapeHtml(data.name)}</textarea></td>
     <td style="width:90px"><input class="dnd-input" placeholder="Qty" value="${escapeHtml(data.qty)}" style="width:100%"></td>
     <td style="width:90px"><input class="dnd-input" placeholder="Weight" value="${escapeHtml(data.weight)}" style="width:100%"></td>
     <td style="width:110px"><input class="dnd-input" placeholder="Value" value="${escapeHtml(data.value)}" style="width:100%"></td>
-    <td style="width:120px">
-      <button class="notes-btn" type="button">Notes</button>
-      <div class="notes"><textarea class="dnd-input" placeholder="Notes...">${escapeHtml(data.notes)}</textarea></div>
-    </td>
+    <td><textarea class="dnd-input" placeholder="Description...">${escapeHtml(data.description)}</textarea></td>
     <td style="width:60px;text-align:right">
       <button class="small-btn trash-btn" title="Remove">Remove</button>
     </td>
   `;
-  // wiring
-  const notesBtn = tr.querySelector('.notes-btn');
-  const notesDiv = tr.querySelector('.notes');
-  const notesArea = notesDiv.querySelector('textarea');
-  const removeBtn = tr.querySelector('.trash-btn');
-
-  notesBtn.addEventListener('click', ()=>{
-    // If notes area is hidden, expand inline; if already expanded, open modal for larger editing
-    const isOpen = notesDiv.classList.contains('notes-open');
-    if(!isOpen){
-      notesDiv.classList.add('notes-open');
-      notesDiv.style.display = 'block';
-    } else {
-      openNotesModal(notesArea, notesDiv);
-    }
-  });
-
-  // double-click the notes textarea to open modal
-  notesArea.addEventListener('dblclick', ()=>openNotesModal(notesArea, notesDiv));
-
-  removeBtn.addEventListener('click', ()=>tr.remove());
-
+  const removeBtn = tr.querySelector('.trash-btn'); removeBtn.addEventListener('click', ()=>tr.remove());
+  // bind newly-created expandable textarea
+  bindExpandableTextareas(tr);
   return tr;
 }
 
-// createContainerNode: returns a container <div> with header and an inventory table
 function createContainerNode(name = 'Container', data = { items: [] }){
   const wrapper = document.createElement('div');
   wrapper.className = 'mt-4';
@@ -544,16 +759,13 @@ function createContainerNode(name = 'Container', data = { items: [] }){
   wrapper.appendChild(header);
 
   const table = document.createElement('table'); table.className='inventory-table';
-  table.innerHTML = `<thead><tr><th>Item</th><th>Qty</th><th>Weight</th><th>Value</th><th>Notes</th><th></th></tr></thead><tbody></tbody>`;
+  table.innerHTML = `<thead><tr><th>Item</th><th>Qty</th><th>Weight</th><th>Value</th><th>Description</th><th></th></tr></thead><tbody></tbody>`;
   wrapper.appendChild(table);
 
   const tbody = table.querySelector('tbody');
 
-  addBtn.addEventListener('click', ()=>{ const r=createInventoryRow(); tbody.appendChild(r); feather.replace(); r.scrollIntoView({behavior:'smooth',block:'center'}); });
-  renameBtn.addEventListener('click', ()=>{
-    const newName = prompt('Container name:', h.textContent);
-    if(newName) h.textContent = newName;
-  });
+  addBtn.addEventListener('click', ()=>{ const r=createInventoryRow(); tbody.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(r); r.scrollIntoView({behavior:'smooth',block:'center'}); });
+  renameBtn.addEventListener('click', ()=>{ const newName = prompt('Container name:', h.textContent); if(newName) h.textContent = newName; });
   removeBtn.addEventListener('click', ()=> wrapper.remove());
 
   // seed items if passed
@@ -564,7 +776,6 @@ function createContainerNode(name = 'Container', data = { items: [] }){
   return wrapper;
 }
 
-// promptAddContainer -> show prompt and create
 function promptAddContainer(){
   const name = prompt('Container name (e.g., Equipped, Backpack, Pouch):','New Container');
   if(name) addContainer(name);
@@ -573,11 +784,57 @@ function promptAddContainer(){
 function addContainer(name, data){
   const container = createContainerNode(name || 'New Container', data || {});
   document.getElementById('inventory-containers').appendChild(container);
-  feather.replace();
-  container.scrollIntoView({behavior:'smooth',block:'center'});
+  feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(container); container.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-// Notes modal functions
+// seed default containers only if empty (prevents duplication when saved page re-runs)
+function seedInventory(){
+  const containerRoot = document.getElementById('inventory-containers');
+  if(containerRoot.children.length === 0){
+    addContainer('Equipped', { items: [ {name:'Longsword',qty:1,weight:'3',value:'15 gp',description:'A trusty blade.'} ] });
+    addContainer('Backpack', { items: [ {name:'Rations',qty:5,weight:'2',value:'5 gp',description:'Dried meals'} ] });
+    addContainer('Pouch'); // blank container
+  }
+}
+
+// --- Spellcasting: allow multiple casting abilities ---
+function createSpellcastingRow(ability='int'){
+  const div = document.createElement('div'); div.className='spellcasting-row';
+  div.innerHTML = `
+    <div style="flex:1;min-width:160px">
+      <div class="field-title">Spellcasting Ability</div>
+      <select class="dnd-input spellcasting-select">
+        <option value="int">Intelligence</option>
+        <option value="wis">Wisdom</option>
+        <option value="cha">Charisma</option>
+      </select>
+    </div>
+    <div style="width:160px;min-width:120px">
+      <div class="field-title">Spell Save DC</div>
+      <input class="dnd-input spell-save-dc" readonly>
+    </div>
+    <div style="width:160px;min-width:120px">
+      <div class="field-title">Spell Attack Bonus</div>
+      <input class="dnd-input spell-attack-bonus" readonly>
+    </div>
+    <div class="control-group" style="margin-left:auto">
+      <button class="small-btn remove-casting" title="Remove casting ability">Remove</button>
+    </div>
+  `;
+  div.querySelector('.spellcasting-select').value = ability;
+  div.querySelector('.remove-casting').addEventListener('click', ()=>{ div.remove(); updateModifiers(); });
+  // recalc on ability change
+  div.querySelector('.spellcasting-select').addEventListener('input', ()=>updateModifiers());
+  return div;
+}
+
+// initialize one casting ability
+const spellcastingList = document.getElementById('spellcasting-list');
+if(spellcastingList.children.length===0) spellcastingList.appendChild(createSpellcastingRow('int'));
+
+document.getElementById('add-casting-btn').addEventListener('click', ()=>{ spellcastingList.appendChild(createSpellcastingRow('int')); feather.replace(); annotateFieldsAndAutosize(); updateModifiers(); });
+
+// --- Notes modal functions (kept for compatibility) ---
 let _notesModalTarget = null;
 function openNotesModal(textarea, notesDiv){
   _notesModalTarget = textarea;
@@ -590,25 +847,21 @@ function openNotesModal(textarea, notesDiv){
 function closeNotesModal(){ document.getElementById('item-notes-modal').style.display='none'; _notesModalTarget=null; }
 function saveNotesModal(){ const modalText = document.getElementById('item-notes-modal-text'); if(_notesModalTarget) _notesModalTarget.value = modalText.value; closeNotesModal(); }
 
-// seed default containers only if empty (prevents duplication when saved page re-runs)
-function seedInventory(){
-  const containerRoot = document.getElementById('inventory-containers');
-  if(containerRoot.children.length === 0){
-    addContainer('Equipped', { items: [ {name:'Longsword',qty:1,weight:'3',value:'15 gp',notes:'A trusty blade.'} ] });
-    addContainer('Backpack', { items: [ {name:'Rations',qty:5,weight:'2',value:'5 gp',notes:'Dried meals'} ] });
-    addContainer('Pouch'); // blank container
-  }
-}
-seedInventory();
-
 // initial seed for weapons/armor/spells/items to avoid empty UI if desired
 if(document.getElementById('weapons-list').children.length===0) addWeapon();
 if(document.getElementById('armor-list').children.length===0) addArmor();
-if(document.getElementById('cantrips-list').children.length===0) addSpell('cantrip');
-if(document.getElementById('prepared-spells-list').children.length===0) addSpell('prepared');
+if(document.querySelector('#cantrips-table tbody').children.length===0) addSpell('cantrip');
+if(document.querySelector('#prepared-table tbody').children.length===0) addSpell('prepared');
 
-// initialize modifiers
-updateModifiers();
+// seed inventory
+seedInventory();
+
+// initialize modifiers and field annotations
+setTimeout(()=>{ annotateFieldsAndAutosize(); bindExpandableTextareas(); updateModifiers(); },120);
+
+// keep feather icons after dynamic additions
+const observer = new MutationObserver(()=>{ feather.replace(); });
+observer.observe(document.body, { childList:true, subtree:true });
 </script>
 </body>
 
@@ -618,6 +871,5 @@ updateModifiers();
   </p>
   <p>You are free to share and adapt this sheet with credit. This project is a fan-made tool and is not affiliated with or endorsed by Wizards of the Coast.</p>
 </footer>
-
 
 </html>

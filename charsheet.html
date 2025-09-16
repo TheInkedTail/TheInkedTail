@@ -81,6 +81,10 @@
 
     /* Expandable textarea tweaks */
     textarea.expandable{overflow:hidden;resize:vertical;min-height:40px}
+
+    /* Visual cue while dragging */
+    .dragging { opacity: 0.5; }
+    .drag-over { outline: 2px dashed rgba(0,0,0,0.15); }
   </style>
 </head>
 <body>
@@ -509,36 +513,25 @@ function updateModifiers(){
 document.addEventListener('input',(e)=>{ if(e.target && (e.target.classList.contains('ability-score')||e.target.id==='proficiency-bonus')) updateModifiers(); });
 
 // --- Field titles (show placeholder next to fields) and autosize behavior ---
-// Reworked: insert a .field-title immediately before each input/textarea that needs one.
-// Skip insertion when an immediate preceding sibling is a <label> or already a .field-title.
-// This avoids duplicates and also ensures each field gets its own title (no parent-wide skipping).
 function annotateFieldsAndAutosize(){
   const selector = 'input[placeholder], textarea[placeholder]';
   document.querySelectorAll(selector).forEach(el=>{
     if(!el.parentElement) return;
-    // If field is inside a .label-row or .label-col, we already have a left-hand title — skip adding another.
     if(el.closest('.label-row') || el.closest('.label-col')) return;
-
-    // skip if element already has a .field-title immediately before it, or a real <label>
     const prev = el.previousElementSibling;
     if(prev && (prev.classList && prev.classList.contains('field-title') || prev.tagName === 'LABEL')) {
-      // if previous is field-title but empty, fill it
       if(prev.classList && prev.classList.contains('field-title') && !prev.textContent.trim()){
         prev.textContent = el.getAttribute('placeholder') || '';
       }
       return;
     }
-    // also skip if element is already wrapped by a .field-wrapper we created earlier
     if(el.closest('.field-wrapper')) return;
-
-    // Insert a field-title immediately before the element.
     const label = document.createElement('div');
     label.className = 'field-title';
     label.textContent = el.getAttribute('placeholder') || '';
     el.parentElement.insertBefore(label, el);
   });
 
-  // Remove accidental consecutive field-title nodes (safety)
   document.querySelectorAll('.field-title').forEach(ft=>{
     const p = ft.previousElementSibling;
     if(p && p.classList && p.classList.contains('field-title')){
@@ -546,7 +539,6 @@ function annotateFieldsAndAutosize(){
     }
   });
 
-  // Autosize single-line inputs by adjusting font-size to help content fit
   const singleInputs = document.querySelectorAll('input.dnd-input');
   singleInputs.forEach(inp=>{
     if(inp._autosizeBound) return;
@@ -581,13 +573,10 @@ function annotateFieldsAndAutosize(){
   });
 }
 
-/* ========== NEW: Expandable textarea binding ========== */
-/* Targets textareas with class "expandable" and auto-resizes them to fit content */
+/* Expandable textarea auto-resize */
 function autoExpandTextarea(el){
   if(!el) return;
-  // reset height to allow shrink
   el.style.height = 'auto';
-  // add small offset to avoid scrollbar appearing
   const newHeight = Math.max(el.scrollHeight, 40);
   el.style.height = newHeight + 'px';
 }
@@ -598,13 +587,103 @@ function bindExpandableTextareas(root=document){
     t._expandBound = true;
     t.style.overflow = 'hidden';
     t.addEventListener('input', ()=>autoExpandTextarea(t));
-    // initial expand to fit current content
     setTimeout(()=>autoExpandTextarea(t), 30);
   });
 }
+
+/* ========== Drag-and-drop reordering for spell tables (fixed to allow text selection) ========== */
+/* Minimal, robust implementation that reorders rows (within same tbody).
+   IMPORTANT: prevent dragstart when the user clicked inside a form control so text selection and double-click work. */
+let _dragCounter = 1;
+function makeRowDraggable(tr){
+  if(!tr) return;
+  // Give each row a stable id if it doesn't have one
+  if(!tr.dataset.dragId) tr.dataset.dragId = 'spellrow-' + (_dragCounter++);
+
+  // On mousedown/touchstart decide whether this row should be draggable.
+  // If the user clicked inside a form control, disable draggable so text selection works.
+  const decideDraggable = (e) => {
+    // if target is inside an input/textarea/select, disable dragging
+    if(e.target && e.target.closest && e.target.closest('input, textarea, select')) {
+      tr.draggable = false;
+    } else {
+      tr.draggable = true;
+    }
+  };
+  tr.addEventListener('mousedown', decideDraggable);
+  tr.addEventListener('touchstart', decideDraggable, {passive:true});
+
+  // dragstart: if for some reason dragstart still fires from a control, bail out early.
+  tr.addEventListener('dragstart', (e)=>{
+    if(e.target && e.target.closest && e.target.closest('input, textarea, select')) {
+      e.preventDefault();
+      return;
+    }
+    tr.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', tr.dataset.dragId);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  tr.addEventListener('dragend', ()=>{ tr.classList.remove('dragging'); cleanupDragOver(tr.parentElement); });
+
+  tr.addEventListener('dragenter', (e) => {
+    const dragging = document.querySelector('.dragging');
+    if(!dragging) return;
+    if(tr === dragging) return;
+    tr.classList.add('drag-over');
+  });
+  tr.addEventListener('dragleave', ()=>{ tr.classList.remove('drag-over'); });
+}
+
+
+// Ensure tbody accepts drops and reorders rows
+function enableSpellDnD(tbody){
+  if(!tbody || tbody._dndEnabled) return;
+  tbody._dndEnabled = true;
+
+  tbody.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const afterEl = getDragAfterElement(tbody, e.clientY);
+    Array.from(tbody.querySelectorAll('tr')).forEach(r=>r.classList.remove('drag-over-after'));
+    if(afterEl && afterEl !== tbody) afterEl.classList.add('drag-over-after');
+  });
+
+  tbody.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    const id = e.dataTransfer.getData('text/plain');
+    if(!id) return;
+    const dragged = tbody.querySelector(`[data-drag-id="${id}"]`);
+    if(!dragged) return;
+    const afterEl = getDragAfterElement(tbody, e.clientY);
+    if(!afterEl || afterEl === dragged) {
+      tbody.appendChild(dragged);
+    } else {
+      tbody.insertBefore(dragged, afterEl);
+    }
+    Array.from(tbody.querySelectorAll('tr')).forEach(r=>r.classList.remove('drag-over','drag-over-after'));
+  });
+
+  function getDragAfterElement(container, y) {
+    const rows = [...container.querySelectorAll('tr:not(.dragging)')];
+    return rows.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element || null;
+  }
+}
+
+function cleanupDragOver(tbody){
+  if(!tbody) return;
+  tbody.querySelectorAll('.drag-over, .drag-over-after').forEach(el=>el.classList.remove('drag-over','drag-over-after'));
+}
 /* ===================================================== */
 
-// --- Weapons / Armor / Spells (re-usable create/add functions) ---
 function escapeHtml(unsafe){ return String(unsafe).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;'); }
 
 function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',range:'',notes:''}){
@@ -622,7 +701,6 @@ function createWeaponNode(data={name:'New Weapon',attack:'+0',damage:'1d6',range
       <div style="width:60px;text-align:right"><button class="small-btn trash-btn" title="Remove weapon"><i data-feather="trash-2"></i></button></div>
     </div>`;
   const remove = wrapper.querySelector('.trash-btn'); remove.addEventListener('click', ()=>wrapper.remove());
-  // ensure newly-created textareas get bound
   bindExpandableTextareas(wrapper);
   return wrapper;
 }
@@ -663,11 +741,13 @@ function createSpellRow(type,data={name:'New Spell',level:'0',range:'',duration:
     <td style="width:60px;text-align:right"><button class="small-btn trash-btn">Remove</button></td>
   `;
   const removeBtn = tr.querySelector('.trash-btn'); removeBtn.addEventListener('click', ()=>tr.remove());
-  // bind newly-created expandable textarea
+  // make row draggable and bind expandable textareas
+  makeRowDraggable(tr);
   bindExpandableTextareas(tr);
+  annotateFieldsAndAutosize();
   return tr;
 }
-function addSpell(type){ const target = (type==='cantrip')?document.querySelector('#cantrips-table tbody'):document.querySelector('#prepared-table tbody'); const r=createSpellRow(type); target.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(r); r.scrollIntoView({behavior:'smooth',block:'center'}); }
+function addSpell(type){ const target = (type==='cantrip')?document.querySelector('#cantrips-table tbody'):document.querySelector('#prepared-table tbody'); const r=createSpellRow(type); target.appendChild(r); feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(r); enableSpellDnD(target); r.scrollIntoView({behavior:'smooth',block:'center'}); }
 
 // --- PORTRAIT HELPERS ---
 function applyPortraitUrl(){
@@ -690,10 +770,6 @@ function updatePortrait(input){ if(input.files && input.files[0]){ const reader=
 
 // --- SAVE (download HTML snapshot) ---
 function saveCharacterSheet(){
-  // Sync current values into attributes/text nodes so that serialization preserves edits.
-  // Inputs: set value attribute; checkboxes/radios: set/remove 'checked'
-  // Textareas: write current value into the textarea text content
-  // Selects: mark selected options with 'selected'
   document.querySelectorAll('input, textarea, select').forEach(el=>{
     const tag = (el.tagName || '').toLowerCase();
     if(tag === 'input'){
@@ -701,11 +777,9 @@ function saveCharacterSheet(){
       if(type === 'checkbox' || type === 'radio'){
         if(el.checked) el.setAttribute('checked','checked'); else el.removeAttribute('checked');
       } else {
-        // set value attribute to current value
         el.setAttribute('value', el.value);
       }
     } else if(tag === 'textarea'){
-      // place current value as text content inside the textarea
       el.textContent = el.value;
     } else if(tag === 'select'){
       Array.from(el.options).forEach(opt=>{
@@ -737,7 +811,6 @@ function createInventoryRow(data = { name: 'Item', qty: 1, weight: '', value: ''
     </td>
   `;
   const removeBtn = tr.querySelector('.trash-btn'); removeBtn.addEventListener('click', ()=>tr.remove());
-  // bind newly-created expandable textarea
   bindExpandableTextareas(tr);
   return tr;
 }
@@ -768,7 +841,6 @@ function createContainerNode(name = 'Container', data = { items: [] }){
   renameBtn.addEventListener('click', ()=>{ const newName = prompt('Container name:', h.textContent); if(newName) h.textContent = newName; });
   removeBtn.addEventListener('click', ()=> wrapper.remove());
 
-  // seed items if passed
   if(Array.isArray(data.items) && data.items.length){
     data.items.forEach(it=>tbody.appendChild(createInventoryRow(it)));
   }
@@ -787,13 +859,12 @@ function addContainer(name, data){
   feather.replace(); annotateFieldsAndAutosize(); bindExpandableTextareas(container); container.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-// seed default containers only if empty (prevents duplication when saved page re-runs)
 function seedInventory(){
   const containerRoot = document.getElementById('inventory-containers');
   if(containerRoot.children.length === 0){
     addContainer('Equipped', { items: [ {name:'Longsword',qty:1,weight:'3',value:'15 gp',description:'A trusty blade.'} ] });
     addContainer('Backpack', { items: [ {name:'Rations',qty:5,weight:'2',value:'5 gp',description:'Dried meals'} ] });
-    addContainer('Pouch'); // blank container
+    addContainer('Pouch');
   }
 }
 
@@ -823,15 +894,12 @@ function createSpellcastingRow(ability='int'){
   `;
   div.querySelector('.spellcasting-select').value = ability;
   div.querySelector('.remove-casting').addEventListener('click', ()=>{ div.remove(); updateModifiers(); });
-  // recalc on ability change
   div.querySelector('.spellcasting-select').addEventListener('input', ()=>updateModifiers());
   return div;
 }
 
-// initialize one casting ability
 const spellcastingList = document.getElementById('spellcasting-list');
 if(spellcastingList.children.length===0) spellcastingList.appendChild(createSpellcastingRow('int'));
-
 document.getElementById('add-casting-btn').addEventListener('click', ()=>{ spellcastingList.appendChild(createSpellcastingRow('int')); feather.replace(); annotateFieldsAndAutosize(); updateModifiers(); });
 
 // --- Notes modal functions (kept for compatibility) ---
@@ -847,19 +915,19 @@ function openNotesModal(textarea, notesDiv){
 function closeNotesModal(){ document.getElementById('item-notes-modal').style.display='none'; _notesModalTarget=null; }
 function saveNotesModal(){ const modalText = document.getElementById('item-notes-modal-text'); if(_notesModalTarget) _notesModalTarget.value = modalText.value; closeNotesModal(); }
 
-// initial seed for weapons/armor/spells/items to avoid empty UI if desired
 if(document.getElementById('weapons-list').children.length===0) addWeapon();
 if(document.getElementById('armor-list').children.length===0) addArmor();
 if(document.querySelector('#cantrips-table tbody').children.length===0) addSpell('cantrip');
 if(document.querySelector('#prepared-table tbody').children.length===0) addSpell('prepared');
 
-// seed inventory
 seedInventory();
 
-// initialize modifiers and field annotations
-setTimeout(()=>{ annotateFieldsAndAutosize(); bindExpandableTextareas(); updateModifiers(); },120);
+setTimeout(()=>{ annotateFieldsAndAutosize(); bindExpandableTextareas(); updateModifiers();
+// enable DnD on existing spell tables
+  enableSpellDnD(document.querySelector('#cantrips-table tbody'));
+  enableSpellDnD(document.querySelector('#prepared-table tbody'));
+},120);
 
-// keep feather icons after dynamic additions
 const observer = new MutationObserver(()=>{ feather.replace(); });
 observer.observe(document.body, { childList:true, subtree:true });
 </script>
