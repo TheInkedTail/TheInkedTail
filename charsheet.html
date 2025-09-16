@@ -690,6 +690,30 @@ function updatePortrait(input){ if(input.files && input.files[0]){ const reader=
 
 // --- SAVE (download HTML snapshot) ---
 function saveCharacterSheet(){
+  // Sync current values into attributes/text nodes so that serialization preserves edits.
+  // Inputs: set value attribute; checkboxes/radios: set/remove 'checked'
+  // Textareas: write current value into the textarea text content
+  // Selects: mark selected options with 'selected'
+  document.querySelectorAll('input, textarea, select').forEach(el=>{
+    const tag = (el.tagName || '').toLowerCase();
+    if(tag === 'input'){
+      const type = (el.type || '').toLowerCase();
+      if(type === 'checkbox' || type === 'radio'){
+        if(el.checked) el.setAttribute('checked','checked'); else el.removeAttribute('checked');
+      } else {
+        // set value attribute to current value
+        el.setAttribute('value', el.value);
+      }
+    } else if(tag === 'textarea'){
+      // place current value as text content inside the textarea
+      el.textContent = el.value;
+    } else if(tag === 'select'){
+      Array.from(el.options).forEach(opt=>{
+        if(opt.selected) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected');
+      });
+    }
+  });
+
   const htmlContent='<!doctype html>\n'+document.documentElement.outerHTML;
   const blob=new Blob([htmlContent],{type:'text/html'});
   const url=URL.createObjectURL(blob);
