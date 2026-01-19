@@ -1,17 +1,39 @@
-Creative Commons Attribution-NonCommercial 4.0 International
+# All Rights Reserved
 
-This content (including but not limited to written works, blog posts, images, branding, and media) created under "The Inked Tail" and Michael Garcia is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+## Scope
 
-To view a copy of this license, visit [https://creativecommons.org/licenses/by-nc/4.0/](https://creativecommons.org/licenses/by-nc/4.0/).
+This license applies to all **original creative content** created by
+**Michael Garcia / The Inked Tail**, including but not limited to:
 
-You are free to:
-- Share — copy and redistribute the material in any medium or format
-- Adapt — remix, transform, and build upon the material
+- Fiction, stories, and chapters
+- Blog posts and articles
+- Worldbuilding, lore, and setting material
+- Original artwork, illustrations, and images
+- Logos, branding, and site identity
+- Any other non-code creative material
 
-Under the following terms:
-- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-- NonCommercial — You may not use the material for commercial purposes.
+## Rights and Restrictions
 
-No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+All rights are reserved.
 
-Unless otherwise stated, all original content on this site is covered by this license.
+You may **NOT**, without explicit written permission from the copyright holder:
+
+- Copy or reproduce the content
+- Share or redistribute the content
+- Modify, adapt, or create derivative works
+- Use the content for commercial or non-commercial purposes
+- Host, mirror, scrape, or archive the content elsewhere
+
+Viewing the content on this website does **not** grant any license or rights.
+
+## Permissions
+
+Permission requests must be made in writing and explicitly granted.
+
+Contact:
+theinkedtail@gmail.com
+
+---
+
+© 2026 Michael Garcia / The Inked Tail  
+All rights reserved.

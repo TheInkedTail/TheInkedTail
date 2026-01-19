@@ -1,3 +1,23 @@
+# MIT License
+
+## Scope
+
+This license applies to all **code** in this repository, including:
+
+- HTML structure and markup
+- CSS stylesheets
+- JavaScript functionality
+- The D&D Character Sheet Tool (`charsheet.html`) code and design
+
+This license does **NOT** apply to:
+- Original creative content (covered by CC BY-NC 4.0 — see LICENSE-content.md)
+- D&D game mechanics and terminology (covered by OGL — see OGL-1.0a.md)
+
+---
+
+## License Text
+
+```
 MIT License
 
 Copyright (c) 2025 Michael Garcia
@@ -19,3 +39,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
+
+---
+
+## What This Means
+
+You are free to:
+- ✅ Use this code for any purpose (personal or commercial)
+- ✅ Modify the code as you see fit
+- ✅ Distribute copies of the original or modified code
+- ✅ Include this code in proprietary software
+
+You must:
+- 📋 Include the copyright notice and license text in any copies
+
+---
+
+Copyright (c) 2026 Michael Garcia
