@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Latest updates and news from Michael Garcia, fantasy author at The Inked Tail." />
+  <meta name="theme-color" content="#2d5a47" />
+  <title>Updates | The Inked Tail</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="cozy.css">
+
+  <style>
+    /* Updates Page Layout */
+    .updates-layout {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 2rem;
+      align-items: start;
+    }
+    
+    .updates-main {
+      min-width: 0;
+    }
+    
+    /* Sidebar */
+    .updates-sidebar {
+      position: sticky;
+      top: 80px;
+    }
+    
+    .sidebar-section {
+      background: var(--card-bg, rgba(255, 253, 248, 0.85));
+      border: 1px solid var(--border-light, rgba(42, 33, 26, 0.08));
+      border-radius: var(--radius-lg, 20px);
+      padding: 1.25rem;
+      box-shadow: var(--card-shadow, 0 8px 32px rgba(42, 33, 26, 0.08));
+    }
+    
+    .sidebar-title {
+      font-family: var(--font-display, 'IM Fell English', Georgia, serif);
+      font-size: 1.1rem;
+      color: var(--ink, #2a211a);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-light, rgba(42, 33, 26, 0.08));
+    }
+    
+    .tag-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    
+    .tag-filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink-soft, #3d3229);
+      transition: background 0.15s ease, color 0.15s ease;
+      text-align: left;
+    }
+    
+    .tag-filter-btn:hover {
+      background: var(--forest-glow, rgba(45, 90, 71, 0.15));
+    }
+    
+    .tag-filter-btn.active {
+      background: var(--forest, #2d5a47);
+      color: white;
+    }
+    
+    .tag-filter-btn .tag-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .tag-filter-btn .tag-count {
+      margin-left: auto;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+    
+    .clear-filter-btn {
+      margin-top: 0.75rem;
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--border-light, rgba(42, 33, 26, 0.12));
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--ink-muted, #6b5d4d);
+      transition: background 0.15s ease;
+      width: 100%;
+    }
+    
+    .clear-filter-btn:hover {
+      background: rgba(42, 33, 26, 0.05);
+    }
+    
+    .clear-filter-btn.hidden {
+      display: none;
+    }
+    
+    /* Update Cards */
+    .update-card {
+      background: var(--card-bg, rgba(255, 253, 248, 0.85));
+      border: 1px solid var(--border-light, rgba(42, 33, 26, 0.08));
+      border-radius: var(--radius-lg, 20px);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--card-shadow, 0 8px 32px rgba(42, 33, 26, 0.08));
+      position: relative;
+    }
+    
+    .update-card.hidden {
+      display: none;
+    }
+    
+    .update-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 1.5rem;
+      right: 1.5rem;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold, #c9a227), transparent);
+      border-radius: 0 0 2px 2px;
+      opacity: 0.6;
+    }
+    
+    .update-date {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--forest, #2d5a47);
+      background: var(--forest-glow, rgba(45, 90, 71, 0.15));
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .update-title {
+      font-family: var(--font-display, 'IM Fell English', Georgia, serif);
+      font-size: 1.4rem;
+      color: var(--ink, #2a211a);
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+    
+    .update-content {
+      color: var(--ink-soft, #3d3229);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+    
+    .update-content p {
+      margin-bottom: 0.8rem;
+    }
+    
+    .update-content p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .update-content a {
+      color: var(--forest, #2d5a47);
+      text-decoration: underline;
+      text-decoration-color: var(--gold-soft, rgba(201, 162, 39, 0.4));
+      text-underline-offset: 2px;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    }
+    
+    .update-content a:hover {
+      color: var(--copper, #8b5a2b);
+      text-decoration-color: var(--copper, #8b5a2b);
+    }
+    
+    .update-tags {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    
+    .update-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       TAG COLORS - Add new tags here!
+       Just add a new .tag-[name] class with background and color
+    ═══════════════════════════════════════════════════════════════════════ */
+    .tag-news {
+      background: rgba(45, 90, 71, 0.15);
+      color: #2d5a47;
+    }
+    .dot-news { background: #2d5a47; }
+    
+    .tag-personal {
+      background: rgba(179, 92, 58, 0.15);
+      color: #8b4a3a;
+    }
+    .dot-personal { background: #8b4a3a; }
+    
+    .tag-chapters {
+      background: rgba(201, 162, 39, 0.2);
+      color: #8b5a2b;
+    }
+    .dot-chapters { background: #c9a227; }
+    
+    .tag-lore {
+      background: rgba(106, 90, 140, 0.15);
+      color: #5a4a7a;
+    }
+    .dot-lore { background: #6a5a8c; }
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .page-btn {
+      min-width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0.75rem;
+      border: 1px solid var(--border-light, rgba(42, 33, 26, 0.12));
+      background: var(--card-bg, rgba(255, 253, 248, 0.85));
+      color: var(--ink-soft, #3d3229);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    
+    .page-btn:hover {
+      background: var(--forest-glow, rgba(45, 90, 71, 0.15));
+      border-color: var(--forest, #2d5a47);
+    }
+    
+    .page-btn.active {
+      background: var(--forest, #2d5a47);
+      border-color: var(--forest, #2d5a47);
+      color: white;
+    }
+    
+    .page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    
+    .page-info {
+      color: var(--ink-muted, #6b5d4d);
+      font-size: 0.9rem;
+      margin: 0 0.5rem;
+    }
+    
+    /* No results message */
+    .no-results {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--ink-muted, #6b5d4d);
+      font-style: italic;
+    }
+    
+    .no-results.hidden {
+      display: none;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .updates-layout {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+        margin: 1.5rem auto;
+      }
+      
+      .updates-sidebar {
+        position: static;
+        order: -1;
+      }
+      
+      .tag-filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .tag-filter-btn {
+        flex: 0 0 auto;
+      }
+      
+      .tag-filter-btn .tag-count {
+        display: none;
+      }
+      
+      .update-card {
+        padding: 1.25rem 1.5rem;
+      }
+      
+      .update-title {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body class="updates">
+
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="updates.html">Updates</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://www.royalroad.com/profile/708964" target="_blank">Royal Road</a>
+    <a href="https://x.com/TheInkedTail" target="_blank">X</a>
+    <a href="charsheet.html" target="_blank">D&D Character Sheet Tool</a>
+  </nav>
+
+  <header>
+    <h1>Updates</h1>
+    <p>News, announcements, and musings from the author</p>
+  </header>
+
+  <div class="updates-layout">
+    <main class="updates-main">
+    
+      <!-- ═══════════════════════════════════════════════════════════════════
+           HOW TO ADD A NEW UPDATE:
+           1. Copy an <article class="update-card"> block
+           2. Paste it at the TOP of this section (newest first)
+           3. Edit the date, title, and content
+           4. Add data-tags="tag1,tag2" with your tag names (lowercase)
+           
+           AVAILABLE TAGS: news, personal, chapters, lore
+           
+           TO ADD A NEW TAG:
+           1. Add the CSS classes .tag-[name] and .dot-[name] in the style section
+           2. Add a button in the sidebar with data-tag="[name]"
+           3. Use it in your posts with data-tags="[name]"
+      ═══════════════════════════════════════════════════════════════════ -->
+
+      <div id="updates-container">
+
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- UPDATES START HERE (newest at top) -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+
+        <article class="update-card" data-tags="news">
+          <span class="update-date">February 4, 2026</span>
+          <h2 class="update-title">Welcome to the Updates Page!</h2>
+          <div class="update-content">
+            <p>This is where I'll be posting news, announcements, and occasional thoughts about what I'm working on. Expect updates about new chapter releases, behind-the-scenes glimpses into my worldbuilding process, and general news.</p>
+            <p>For the latest chapters, check out my work on <a href="https://www.royalroad.com/profile/708964">Royal Road</a>. And if you want to chat, feel free to reach out on <a href="https://x.com/TheInkedTail">X</a> or through the <a href="contact.html">contact page</a>.</p>
+            <p>Thanks for stopping by!</p>
+          </div>
+          <div class="update-tags">
+            <span class="update-tag tag-news">News</span>
+          </div>
+        </article>
+
+        <article class="update-card" data-tags="news,chapters">
+          <span class="update-date">January 1, 2026</span>
+          <h2 class="update-title">Series Currently on Hiatus</h2>
+          <div class="update-content">
+            <p>Just a heads up that the series is currently on hiatus while I work on revising the first two volumes. I'll be adding new scenes, expanding the world lore, and generally making it a better read overall.</p>
+			<p>I just finished rewriting all of Book One (previously Volume 1, it's much longer now). The next step is to read over it all, make some edits, then I plan to post chapters to <a href="https://www.royalroad.com/profile/708964/fictions">Royal Road</a> and publish the e-book through Amazon KDP.</p>
+            <p>Keep an eye on the <a href="schedule.html">schedule page</a> for updates on when new chapters will resume. I appreciate your patience!</p>
+          </div>
+          <div class="update-tags">
+            <span class="update-tag tag-news">News</span>
+            <span class="update-tag tag-chapters">Chapters</span>
+          </div>
+        </article>
+
+        <!-- Example posts to demonstrate pagination (you can delete these) -->
+        
+		
+
+      </div>
+
+      <p class="no-results hidden">No updates found for this filter.</p>
+
+      <nav class="pagination" id="pagination"></nav>
+
+    </main>
+
+    <aside class="updates-sidebar">
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Filter by Topic</h3>
+        <div class="tag-filters" id="tag-filters">
+          <!-- ═══════════════════════════════════════════════════════════════
+               TO ADD A NEW TAG FILTER:
+               Copy a button below and change:
+               - data-tag="yourtagname" (lowercase, no spaces)
+               - dot-[yourtagname] class
+               - The label text
+               
+               Don't forget to also add .tag-[name] and .dot-[name] CSS above!
+          ═══════════════════════════════════════════════════════════════ -->
+          <button class="tag-filter-btn" data-tag="news">
+            <span class="tag-dot dot-news"></span>
+            News
+            <span class="tag-count" data-count="news">0</span>
+          </button>
+          <button class="tag-filter-btn" data-tag="personal">
+            <span class="tag-dot dot-personal"></span>
+            Personal
+            <span class="tag-count" data-count="personal">0</span>
+          </button>
+          <button class="tag-filter-btn" data-tag="chapters">
+            <span class="tag-dot dot-chapters"></span>
+            Chapters
+            <span class="tag-count" data-count="chapters">0</span>
+          </button>
+          <button class="tag-filter-btn" data-tag="lore">
+            <span class="tag-dot dot-lore"></span>
+            Lore
+            <span class="tag-count" data-count="lore">0</span>
+          </button>
+        </div>
+        <button class="clear-filter-btn hidden" id="clear-filter">Show All</button>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Michael Garcia. All rights reserved.</p>
+  </footer>
+
+<script>
+(function() {
+  const POSTS_PER_PAGE = 5;
+  
+  const container = document.getElementById('updates-container');
+  const pagination = document.getElementById('pagination');
+  const tagFilters = document.getElementById('tag-filters');
+  const clearFilterBtn = document.getElementById('clear-filter');
+  const noResults = document.querySelector('.no-results');
+  
+  let currentPage = 1;
+  let activeTag = null;
+  
+  // Get all posts
+  function getAllPosts() {
+    return Array.from(container.querySelectorAll('.update-card'));
+  }
+  
+  // Get filtered posts
+  function getFilteredPosts() {
+    const allPosts = getAllPosts();
+    if (!activeTag) return allPosts;
+    
+    return allPosts.filter(post => {
+      const tags = (post.dataset.tags || '').split(',').map(t => t.trim().toLowerCase());
+      return tags.includes(activeTag.toLowerCase());
+    });
+  }
+  
+  // Update tag counts
+  function updateTagCounts() {
+    const allPosts = getAllPosts();
+    const counts = {};
+    
+    allPosts.forEach(post => {
+      const tags = (post.dataset.tags || '').split(',').map(t => t.trim().toLowerCase());
+      tags.forEach(tag => {
+        if (tag) counts[tag] = (counts[tag] || 0) + 1;
+      });
+    });
+    
+    document.querySelectorAll('.tag-count').forEach(el => {
+      const tag = el.dataset.count;
+      el.textContent = counts[tag] || 0;
+    });
+  }
+  
+  // Render pagination
+  function renderPagination(totalPosts) {
+    const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+    pagination.innerHTML = '';
+    
+    if (totalPages <= 1) return;
+    
+    // Previous button
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn';
+    prevBtn.textContent = '←';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+    pagination.appendChild(prevBtn);
+    
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+      pageBtn.textContent = i;
+      pageBtn.addEventListener('click', () => {
+        currentPage = i;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      pagination.appendChild(pageBtn);
+    }
+    
+    // Next button
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn';
+    nextBtn.textContent = '→';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+    pagination.appendChild(nextBtn);
+  }
+  
+  // Main render function
+  function render() {
+    const filteredPosts = getFilteredPosts();
+    const allPosts = getAllPosts();
+    
+    // Hide all posts first
+    allPosts.forEach(post => post.classList.add('hidden'));
+    
+    // Show filtered posts for current page
+    const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+    const endIndex = startIndex + POSTS_PER_PAGE;
+    const postsToShow = filteredPosts.slice(startIndex, endIndex);
+    
+    postsToShow.forEach(post => post.classList.remove('hidden'));
+    
+    // Show/hide no results message
+    if (filteredPosts.length === 0) {
+      noResults.classList.remove('hidden');
+    } else {
+      noResults.classList.add('hidden');
+    }
+    
+    // Update pagination
+    renderPagination(filteredPosts.length);
+    
+    // Update filter button states
+    document.querySelectorAll('.tag-filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tag === activeTag);
+    });
+    
+    // Show/hide clear button
+    clearFilterBtn.classList.toggle('hidden', !activeTag);
+  }
+  
+  // Tag filter click handler
+  tagFilters.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tag-filter-btn');
+    if (!btn) return;
+    
+    const tag = btn.dataset.tag;
+    
+    if (activeTag === tag) {
+      activeTag = null;
+    } else {
+      activeTag = tag;
+    }
+    
+    currentPage = 1;
+    render();
+  });
+  
+  // Clear filter handler
+  clearFilterBtn.addEventListener('click', () => {
+    activeTag = null;
+    currentPage = 1;
+    render();
+  });
+  
+  // Initial render
+  updateTagCounts();
+  render();
+})();
+</script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "303d6224224f40b6b11286fa05c0bd06"}'></script><!-- End Cloudflare Web Analytics -->
+
+</body>
+</html>
