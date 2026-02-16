@@ -12,6 +12,91 @@
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="cozy.css">
 
+  <style>
+    /* Larger calendar for big screens */
+    .calendar-container {
+      max-width: 1100px;
+    }
+    
+    .calendar > div {
+      min-height: 120px;
+    }
+    
+    /* Multiple events per day */
+    .event-list {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .event-hidden {
+      display: none;
+    }
+    
+    .event-hidden.event-visible {
+      display: block;
+    }
+    
+    .expand-btn {
+      margin-top: 0.25rem;
+      padding: 0.2rem 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: rgba(45, 90, 71, 0.15);
+      color: #2d5a47;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    
+    .expand-btn:hover {
+      background: rgba(45, 90, 71, 0.25);
+    }
+    
+    /* Mobile: stack calendar days for readability */
+    @media (max-width: 600px) {
+      .calendar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .calendar .day-name {
+        display: none;
+      }
+      
+      .calendar > div {
+        min-height: auto;
+        padding: 0.75rem;
+        border-radius: 8px;
+        display: none; /* Hide empty days */
+      }
+      
+      /* Only show days that have events */
+      .calendar > div.has-events {
+        display: block;
+        background: rgba(255, 253, 248, 0.9);
+        border: 1px solid rgba(42, 33, 26, 0.1);
+      }
+      
+      .calendar > div.has-events .day-number {
+        position: static;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .calendar > div.has-events .day-number::before {
+        content: attr(data-full-date);
+      }
+      
+      .calendar > div.has-events .event-list {
+        margin-top: 0;
+      }
+    }
+  </style>
+
 </head>
 <body class="schedule">
 
@@ -28,8 +113,8 @@
 
   <header>
     <h1>Schedule</h1>
-    <p>The series is currently on hiatus as I work to revise the first two volumes.</p>
-	<p>I will be revising the story with new scenes, world lore, and it will be a better read overall.</p>
+    <p>New chapters are being published to Royal Road bi-weekly.</p>
+	<p>The eBook will be available to purchase on February 28, 2026.</p>
   </header>
 
   <section class="calendar-container">
@@ -56,22 +141,24 @@
 
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    // Events database
+    // Events database - now supports multiple events per day as an array
     const events = {
-      "2026-02-20": "Book One - Chapter 1",
-      "2026-02-28": "Book One - Chapter 2",
-      "2026-03-14": "Book One - Chapter 3",
-      "2026-03-28": "Book One - Chapter 4",
-      "2026-04-11": "Book One - Chapter 5",
-      "2026-04-25": "Book One - Chapter 6",
-	  "2026-05-09": "Book One - Chapter 7",
-	  "2026-05-23": "Book One - Chapter 8",
-	  "2026-06-06": "Book One - Chapter 9",
-	  "2026-06-20": "Book One - Chapter 10",
-	  "2026-07-04": "Book One - Chapter 11",
-	  "2026-07-18": "Book One - Chapter 12",
-	  "2026-08-01": "Book One - Chapter 13"
+      "2026-02-20": ["Book One - Chapter 1"],
+      "2026-02-28": ["Book One - Chapter 2", "Book One Release Date"],
+      "2026-03-14": ["Book One - Chapter 3"],
+      "2026-03-28": ["Book One - Chapter 4"],
+      "2026-04-11": ["Book One - Chapter 5"],
+      "2026-04-25": ["Book One - Chapter 6"],
+	  "2026-05-09": ["Book One - Chapter 7"],
+	  "2026-05-23": ["Book One - Chapter 8"],
+	  "2026-06-06": ["Book One - Chapter 9"],
+	  "2026-06-20": ["Book One - Chapter 10"],
+	  "2026-07-04": ["Book One - Chapter 11"],
+	  "2026-07-18": ["Book One - Chapter 12"],
+	  "2026-08-01": ["Book One - Chapter 13"]
     };
+
+    const MAX_VISIBLE = 2;
 
     function renderCalendar(month, year) {
       calendarGrid.innerHTML = "";
@@ -109,11 +196,59 @@
         dayCell.appendChild(dayNumber);
 
         const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        if (events[key]) {
-          const eventEl = document.createElement("div");
-          eventEl.classList.add("event");
-          eventEl.textContent = events[key];
-          dayCell.appendChild(eventEl);
+        const dayEvents = events[key];
+        
+        if (dayEvents && dayEvents.length > 0) {
+          dayCell.classList.add("has-events");
+          
+          // Add full date for mobile display
+          const fullDate = new Date(year, month, d).toLocaleDateString('en-US', { 
+            weekday: 'short', month: 'short', day: 'numeric' 
+          });
+          dayNumber.setAttribute("data-full-date", fullDate + " — ");
+          
+          const eventList = document.createElement("div");
+          eventList.classList.add("event-list");
+          
+          dayEvents.forEach((eventText, index) => {
+            const eventEl = document.createElement("div");
+            eventEl.classList.add("event");
+            
+            // Hide events beyond MAX_VISIBLE
+            if (index >= MAX_VISIBLE) {
+              eventEl.classList.add("event-hidden");
+            }
+            
+            eventEl.textContent = eventText;
+            eventList.appendChild(eventEl);
+          });
+          
+          // Add expand button if there are more than MAX_VISIBLE events
+          if (dayEvents.length > MAX_VISIBLE) {
+            const expandBtn = document.createElement("button");
+            expandBtn.classList.add("expand-btn");
+            const hiddenCount = dayEvents.length - MAX_VISIBLE;
+            expandBtn.textContent = `+${hiddenCount} more`;
+            expandBtn.addEventListener("click", function() {
+              const hiddenEvents = eventList.querySelectorAll(".event-hidden");
+              const isExpanded = expandBtn.dataset.expanded === "true";
+              
+              hiddenEvents.forEach(el => {
+                el.classList.toggle("event-visible", !isExpanded);
+              });
+              
+              if (isExpanded) {
+                expandBtn.textContent = `+${hiddenCount} more`;
+                expandBtn.dataset.expanded = "false";
+              } else {
+                expandBtn.textContent = "Show less";
+                expandBtn.dataset.expanded = "true";
+              }
+            });
+            eventList.appendChild(expandBtn);
+          }
+          
+          dayCell.appendChild(eventList);
         }
 
         calendarGrid.appendChild(dayCell);
