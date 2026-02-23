@@ -10,7 +10,7 @@ This license applies to all **code** in this repository, including:
 - The D&D Character Sheet Tool (`charsheet.html`) code and design
 
 This license does **NOT** apply to:
-- Original creative content (covered by CC BY-NC 4.0 — see LICENSE-content.md)
+- Original creative content (All Rights Reserved — see LICENSE-content.md)
 - D&D game mechanics and terminology (covered by OGL — see OGL-1.0a.md)
 
 ---
@@ -20,7 +20,7 @@ This license does **NOT** apply to:
 ```
 MIT License
 
-Copyright (c) 2025 Michael Garcia
+Copyright (c) 2026 Michael Garcia
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

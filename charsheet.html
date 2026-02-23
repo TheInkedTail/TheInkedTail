@@ -158,11 +158,35 @@
     .field-title{font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.12rem;font-weight:500}
     .autosize{transition:font-size .08s linear}
     @media print{
-      body{background:white;color:black}
-      .topbar{display:none}
-      .container{max-width:100%;padding:0}
-      .sheet-section{border:none;box-shadow:none}
-      .small-btn,.trash-btn{display:none}
+      @page{size:A4 portrait;margin:12mm 10mm}
+      html,body{background:white!important;color:black!important}
+      body{
+        background:white!important;
+        font-size:10pt
+      }
+      .topbar{display:none!important}
+      .container{max-width:100%;padding:0;margin:0}
+      .sheet-section{
+        border:1px solid #bbb!important;
+        box-shadow:none!important;
+        margin-bottom:6pt;
+        padding:8pt;
+        break-inside:avoid
+      }
+      .small-btn,.trash-btn,.notes-btn{display:none!important}
+      input,textarea,select{
+        border:1px solid #ccc!important;
+        background:white!important;
+        box-shadow:none!important;
+        color:black!important
+      }
+      .notes{display:block!important}
+      .topbar a,.portrait .small-btn{display:none!important}
+      /* keep ability blocks looking tidy */
+      .ability-block{border:1px solid #ccc!important;background:white!important}
+      /* prevent orphaned table headers */
+      thead{display:table-header-group}
+      tr{break-inside:avoid}
     }
     @media (max-width:900px){
       .portrait{width:110px;height:110px}

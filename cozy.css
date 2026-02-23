@@ -203,6 +203,7 @@ img {
 
 body.home .navbar a[href="index.html"]::after,
 body.about .navbar a[href="about.html"]::after,
+body.updates .navbar a[href="updates.html"]::after,
 body.schedule .navbar a[href="schedule.html"]::after,
 body.contact .navbar a[href="contact.html"]::after {
   opacity: 1;
@@ -423,6 +424,343 @@ header p {
   font-size: 1.02rem;
   color: var(--ink-muted);
   line-height: 1.6;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION HEADING (reusable)
+───────────────────────────────────────────────────────────────────────────── */
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 400;
+  color: var(--forest);
+  text-align: center;
+  margin-bottom: 1.75rem;
+  position: relative;
+}
+
+.section-heading::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0.6rem auto 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BOOKS SECTION
+───────────────────────────────────────────────────────────────────────────── */
+.books-section {
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+  padding: 0 1.5rem;
+}
+
+.book-card {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--card-shadow);
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+  transition: box-shadow var(--transition-medium), border-color var(--transition-medium);
+}
+
+.book-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--border-accent);
+}
+
+.book-cover {
+  width: clamp(110px, 16vw, 190px);
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 12px 32px rgba(42, 33, 26, 0.18), 0 4px 10px rgba(42, 33, 26, 0.1);
+  object-fit: cover;
+  aspect-ratio: 2000 / 3200;
+}
+
+.book-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.book-series {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--copper);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.book-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+  line-height: 1.2;
+}
+
+.book-description {
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.book-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.book-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast);
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.book-btn:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+}
+
+.book-btn-primary {
+  background: var(--forest);
+  color: white;
+  border-color: var(--forest);
+  box-shadow: 0 4px 16px rgba(45, 90, 71, 0.25);
+}
+
+.book-btn-primary:hover {
+  background: var(--forest-dark);
+  border-color: var(--forest-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(45, 90, 71, 0.3);
+}
+
+.book-btn-secondary {
+  background: transparent;
+  color: var(--forest);
+  border-color: var(--forest);
+}
+
+.book-btn-secondary:hover {
+  background: var(--forest-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 90, 71, 0.15);
+}
+
+.book-btn-soon {
+  background: transparent;
+  color: var(--ink-faded);
+  border-color: var(--border-medium);
+  cursor: not-allowed;
+  font-style: italic;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BOOK CAROUSEL (peek-style, activates via JS when >1 book)
+───────────────────────────────────────────────────────────────────────────── */
+.book-carousel-outer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Clips the scrolling track — width driven by JS */
+.book-carousel-viewport {
+  flex: 1;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+/* Horizontal scrolling track */
+.book-carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  transition: transform 0.45s var(--ease-out);
+}
+
+/* Cards inside track: width set by JS when carousel is active */
+.book-carousel-track .book-card {
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+/* Prev / Next navigation buttons (hidden until JS activates carousel) */
+.book-nav-btn {
+  display: none; /* JS sets to flex when >1 book */
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-medium);
+  background: var(--card-bg);
+  color: var(--copper);
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.book-nav-btn:hover {
+  background: var(--card-bg-solid);
+  color: var(--forest);
+  transform: scale(1.08);
+  box-shadow: var(--shadow-md);
+}
+
+.book-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none;
+}
+
+.book-nav-btn:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+/* Dot indicators */
+.book-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  min-height: 20px;
+}
+
+.book-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-faded);
+  border: none;
+  cursor: pointer;
+  opacity: 0.35;
+  padding: 0;
+  transition:
+    background var(--transition-fast),
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.book-dot:hover {
+  opacity: 0.65;
+  transform: scale(1.2);
+}
+
+.book-dot.active {
+  background: var(--forest);
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.book-dot:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EXPLORE SECTION WRAPPER (nav cards with heading)
+───────────────────────────────────────────────────────────────────────────── */
+.explore-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SOCIAL / FIND ME SECTION
+───────────────────────────────────────────────────────────────────────────── */
+.social-section {
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.social-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--forest);
+  margin-bottom: 1.25rem;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.93rem;
+  color: var(--forest);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+  outline: none;
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  background: var(--card-bg-solid);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-md);
+  color: var(--forest-dark);
+}
+
+.social-link:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -926,6 +1264,19 @@ footer p {
     padding: 1.75rem 1.25rem;
     border-radius: var(--radius-lg);
   }
+
+  .books-section {
+    padding: 0 1rem;
+  }
+
+  .book-card {
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .explore-section {
+    padding: 1.5rem 1rem;
+  }
   
   .calendar > div {
     min-height: 70px;
@@ -938,33 +1289,53 @@ footer p {
   }
 }
 
+/* Mobile book card: stack cover on top */
+@media (max-width: 560px) {
+  .book-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .book-cover {
+    width: 150px;
+  }
+
+  .book-links {
+    justify-content: center;
+  }
+}
+
 @media (max-width: 480px) {
   .navbar a {
     font-size: 0.82rem;
     padding: 0.35rem 0.5rem;
   }
-  
+
   header h1 {
     font-size: 1.8rem;
   }
-  
+
   .hero h1 {
     font-size: 1.6rem;
   }
-  
+
   .blurb h2 {
     font-size: 1.4rem;
   }
-  
+
   .calendar {
     font-size: 0.85rem;
   }
-  
+
   .calendar .day-name {
     font-size: 0.7rem;
     padding: 0.5rem 0.25rem;
   }
-  
+
   .event {
     font-size: 0.65rem;
     margin-top: 1.2rem;
