@@ -8,32 +8,28 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=IM+Fell+English&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      /* Brand palette — matched to main site (book-cover derived) */
-      --parchment:#F6F1E7;
-      --paper:#FCFAF4;
-      --paper-warm:#F1EADC;
-      --stone:#E4DCCB;
-      --ink:#2E2F26;
-      --ink-soft:#3B3C31;
-      --ink-muted:#6E6A5C;
-
-      --forest:#3B4A33;
-      --forest-dark:#2C3826;
-      --forest-glow:rgba(59,74,51,0.13);
-
-      --copper:#B85F3A;
-      --terracotta:#B85F3A;
-      --sage:#9AA084;
-      --mist:#547079;
-      --gold:#C99A3C;
-      --gold-soft:rgba(201,154,60,0.2);
-
-      --accent:#3B4A33;
-      --border:#C9Bda2;
+      /* Cozy Fantasy Palette - matching main site */
+      --parchment:#faf6ef;
+      --paper:#fffdf8;
+      --paper-warm:#f5efe3;
+      --ink:#2a211a;
+      --ink-soft:#3d3229;
+      --ink-muted:#6b5d4d;
+      
+      --forest:#2d5a47;
+      --forest-dark:#1e3d30;
+      --forest-glow:rgba(45,90,71,0.15);
+      
+      --copper:#8b5a2b;
+      --gold:#c9a227;
+      --gold-soft:rgba(201,162,39,0.2);
+      
+      --accent:#2d5a47;
+      --border:#5a4a3a;
     }
     html,body{height:100%;}
     body{
@@ -221,35 +217,6 @@
     textarea.expandable{overflow:hidden;resize:vertical;min-height:40px}
     .dragging{opacity:0.5}
     .drag-over{outline:2px dashed rgba(45,90,71,0.3)}
-
-    /* ── Brand refresh: section chrome & headings ─────────────────────── */
-    .sheet-section{border-top:3px solid var(--gold)}
-    /* Section titles get the display face + a gold rule, echoing the site */
-    .sheet-section > h3,
-    .sheet-section > div > h3{
-      font-family:'Cinzel','IM Fell English',Georgia,serif;
-      font-size:1.15rem;
-      letter-spacing:0.03em;
-      color:var(--forest);
-      padding-bottom:.4rem;
-      margin-bottom:.3rem;
-      border-bottom:1px solid var(--stone);
-      position:relative;
-    }
-    .sheet-section > h3::after,
-    .sheet-section > div > h3::after{
-      content:'';position:absolute;left:0;bottom:-1px;width:48px;height:1px;
-      background:linear-gradient(90deg,var(--gold),transparent);
-    }
-    .sheet-section h4{
-      font-family:'IM Fell English',Georgia,serif;
-      color:var(--ink-soft);
-      letter-spacing:0.02em;
-    }
-    /* Header wordmark polish */
-    header h1{letter-spacing:0.04em}
-    .ability-block{box-shadow:0 1px 4px rgba(46,47,38,0.05)}
-    .ability-block:focus-within{border-color:var(--forest);box-shadow:0 0 0 3px var(--forest-glow)}
   </style>
 </head>
 <body>

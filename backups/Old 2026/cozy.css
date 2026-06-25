@@ -8,76 +8,58 @@
    DESIGN TOKENS
 ───────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* ── Brand palette (derived from book cover, lightened & balanced) ──
-     Raw swatches kept as named tokens, then mapped onto the legacy
-     token names below so every existing rule picks up the new colors. */
-  --parchment: #F6F1E7;   /* page background */
-  --vellum:    #FCFAF4;   /* cards / surfaces */
-  --stone:     #E4DCCB;   /* borders / dividers */
-  --ink-base:  #2E2F26;   /* body text */
-  --slate:     #6E6A5C;   /* muted text / captions */
-  --forest-base: #3B4A33; /* primary brand */
-  --gold-base:   #C99A3C; /* hero accent / key CTA */
-  --terracotta:  #B85F3A; /* secondary accent */
-  --sage:        #9AA084; /* soft tint */
-  --mist:        #547079; /* links */
-
   /* Parchment & Paper */
-  --paper: var(--parchment);
-  --paper-warm: #F1EADC;
-  --paper-deep: var(--stone);
-  --cream: var(--vellum);
-
-  /* Inks & Text */
-  --ink: var(--ink-base);
-  --ink-soft: #3B3C31;
-  --ink-muted: var(--slate);
-  --ink-faded: #908C7D;
-
-  /* Accent Colors - Forest & Fire */
-  --forest: var(--forest-base);
-  --forest-light: #4A5C40;
-  --forest-dark: #2C3826;
-  --forest-glow: rgba(59, 74, 51, 0.12);
-
-  --copper: var(--terracotta);
-  --copper-light: #C8754F;
-  --copper-dark: #9C4E2E;
-
-  --gold: var(--gold-base);
-  --gold-soft: rgba(201, 154, 60, 0.22);
-  --gold-glow: rgba(201, 154, 60, 0.10);
-
-  --ember: var(--terracotta);
-  --ember-glow: rgba(184, 95, 58, 0.12);
-
-  /* Soft tints */
-  --sage-glow: rgba(154, 160, 132, 0.18);
-  --mist-glow: rgba(84, 112, 121, 0.12);
-
-  /* Surface & Cards */
-  --card-bg: rgba(252, 250, 244, 0.88);
-  --card-bg-solid: var(--vellum);
-  --card-border: rgba(46, 47, 38, 0.10);
-  --card-shadow: 0 8px 32px rgba(46, 47, 38, 0.07), 0 2px 8px rgba(46, 47, 38, 0.04);
-  --card-shadow-hover: 0 16px 48px rgba(46, 47, 38, 0.11), 0 4px 12px rgba(46, 47, 38, 0.06);
-
-  /* Borders & Dividers */
-  --border-light: rgba(46, 47, 38, 0.10);
-  --border-medium: rgba(46, 47, 38, 0.16);
-  --border-accent: rgba(59, 74, 51, 0.28);
-
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(46, 47, 38, 0.06);
-  --shadow-md: 0 4px 16px rgba(46, 47, 38, 0.08);
-  --shadow-lg: 0 12px 40px rgba(46, 47, 38, 0.12);
-  --shadow-glow: 0 0 20px rgba(201, 154, 60, 0.16);
+  --paper: #faf6ef;
+  --paper-warm: #f5efe3;
+  --paper-deep: #ebe4d4;
+  --cream: #fff9f0;
   
-  /* Radii — tightened for a cleaner, less bubbly editorial feel */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  /* Inks & Text */
+  --ink: #2a211a;
+  --ink-soft: #3d3229;
+  --ink-muted: #6b5d4d;
+  --ink-faded: #8f7f6d;
+  
+  /* Accent Colors - Forest & Fire */
+  --forest: #2d5a47;
+  --forest-light: #3a7159;
+  --forest-dark: #1e3d30;
+  --forest-glow: rgba(45, 90, 71, 0.15);
+  
+  --copper: #8b5a2b;
+  --copper-light: #a67c52;
+  --copper-dark: #6b4423;
+  
+  --gold: #c9a227;
+  --gold-soft: rgba(201, 162, 39, 0.2);
+  --gold-glow: rgba(201, 162, 39, 0.08);
+  
+  --ember: #b35c3a;
+  --ember-glow: rgba(179, 92, 58, 0.12);
+  
+  /* Surface & Cards */
+  --card-bg: rgba(255, 253, 248, 0.85);
+  --card-bg-solid: #fffdf8;
+  --card-border: rgba(42, 33, 26, 0.1);
+  --card-shadow: 0 8px 32px rgba(42, 33, 26, 0.08), 0 2px 8px rgba(42, 33, 26, 0.04);
+  --card-shadow-hover: 0 16px 48px rgba(42, 33, 26, 0.12), 0 4px 12px rgba(42, 33, 26, 0.06);
+  
+  /* Borders & Dividers */
+  --border-light: rgba(42, 33, 26, 0.08);
+  --border-medium: rgba(42, 33, 26, 0.12);
+  --border-accent: rgba(45, 90, 71, 0.25);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(42, 33, 26, 0.06);
+  --shadow-md: 0 4px 16px rgba(42, 33, 26, 0.08);
+  --shadow-lg: 0 12px 40px rgba(42, 33, 26, 0.12);
+  --shadow-glow: 0 0 20px rgba(201, 162, 39, 0.15);
+  
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
   
   /* Typography */
   --font-display: 'IM Fell English', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
@@ -170,49 +152,32 @@ img {
   flex-wrap: wrap;
   gap: 0.5rem;
   padding: 0.85rem 1.5rem;
-  background: linear-gradient(180deg, rgba(246, 241, 231, 0.95), rgba(246, 241, 231, 0.88));
+  background: linear-gradient(180deg, rgba(250, 246, 239, 0.95), rgba(250, 246, 239, 0.88));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--stone);
-  box-shadow: 0 2px 0 rgba(201, 154, 60, 0.18), 0 3px 8px rgba(46, 47, 38, 0.05);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: 0 1px 3px rgba(42, 33, 26, 0.04);
 }
 
 .navbar a {
   position: relative;
   font-weight: 600;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.5rem 0.7rem;
-  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
   color: var(--ink-soft);
-  transition:
+  transition: 
     color var(--transition-fast),
-    background var(--transition-fast);
+    background var(--transition-fast),
+    transform var(--transition-fast);
   outline: none;
-}
-
-/* Gold underline that grows from center on hover */
-.navbar a::before {
-  content: '';
-  position: absolute;
-  left: 0.7rem;
-  right: 0.7rem;
-  bottom: 0.25rem;
-  height: 1.5px;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform var(--transition-fast);
 }
 
 .navbar a:hover {
   color: var(--forest);
   background: var(--forest-glow);
-}
-
-.navbar a:hover::before {
-  transform: scaleX(1);
+  transform: translateY(-1px);
 }
 
 .navbar a:focus-visible {
@@ -324,20 +289,14 @@ header p {
   transform: scale(1.08);
 }
 
-/* Gradient Overlay + manuscript double-rule frame */
+/* Gradient Overlay */
 .hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(180deg, rgba(246, 241, 231, 0.4) 0%, rgba(246, 241, 231, 0.82) 100%),
+  background: 
+    linear-gradient(180deg, rgba(250, 246, 239, 0.4) 0%, rgba(250, 246, 239, 0.8) 100%),
     radial-gradient(ellipse at 30% 20%, var(--gold-glow) 0%, transparent 50%);
-  box-shadow:
-    inset 0 0 0 7px rgba(246, 241, 231, 0.45),
-    inset 0 0 0 8px rgba(201, 154, 60, 0.45),
-    inset 0 0 0 10px rgba(246, 241, 231, 0.45),
-    inset 0 0 0 11px rgba(201, 154, 60, 0.22);
 }
 
 .hero h1, .hero p {
@@ -1049,17 +1008,17 @@ header p {
 }
 
 .about-section a {
-  color: var(--mist);
+  color: var(--forest);
   font-weight: 600;
   text-decoration: underline;
-  text-decoration-color: var(--mist-glow);
+  text-decoration-color: var(--gold-soft);
   text-underline-offset: 3px;
   transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
 }
 
 .about-section a:hover {
-  color: var(--terracotta);
-  text-decoration-color: var(--terracotta);
+  color: var(--copper);
+  text-decoration-color: var(--copper);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1229,16 +1188,16 @@ header p {
 ───────────────────────────────────────────────────────────────────────────── */
 footer {
   margin-top: 3rem;
-  padding: 2rem 1.5rem;
+  padding: 1.75rem 1.5rem;
   text-align: center;
-  color: rgba(246, 241, 231, 0.82);
+  color: var(--ink-muted);
   font-size: 0.9rem;
-  border-top: 3px solid var(--gold);
-  background: var(--forest);
+  border-top: 1px solid var(--border-light);
+  background: linear-gradient(180deg, transparent, rgba(235, 228, 212, 0.3));
 }
 
 footer p {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1451,285 +1410,4 @@ footer p {
   .carousel-wrapper {
     display: none;
   }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   ABOUT PAGE — enrichments (lead, pull-quote, tags, signature)
-───────────────────────────────────────────────────────────────────────────── */
-.about-lead {
-  font-size: 1.2rem !important;
-  line-height: 1.7;
-  color: var(--ink) !important;
-}
-
-.about-lead .lead-mark {
-  font-family: var(--font-display);
-  font-style: italic;
-  color: var(--forest);
-}
-
-/* Pull quote between paragraphs */
-.about-quote {
-  margin: 2rem 0;
-  padding: 1.25rem 1.75rem;
-  border-left: 3px solid var(--gold);
-  background: var(--sage-glow);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-}
-
-.about-quote p {
-  font-family: var(--font-display);
-  font-size: 1.25rem !important;
-  font-style: italic;
-  color: var(--forest-dark) !important;
-  margin: 0 !important;
-  line-height: 1.5;
-}
-
-/* "What I write" tag row */
-.about-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin: 1.75rem 0 0.5rem;
-}
-
-.about-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.9rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--forest-dark);
-  background: var(--sage-glow);
-  border: 1px solid var(--border-accent);
-  border-radius: 999px;
-}
-
-/* Hand-signature flourish */
-.about-signature {
-  margin-top: 2rem;
-  text-align: right;
-}
-
-.about-signature span {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.5rem;
-  color: var(--forest);
-}
-
-.about-signature small {
-  display: block;
-  font-family: var(--font-body);
-  font-style: normal;
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-faded);
-  margin-top: 0.15rem;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   NEWSLETTER — slide-up dock card
-───────────────────────────────────────────────────────────────────────────── */
-.newsletter-dock {
-  position: fixed;
-  left: 50%;
-  bottom: 1.25rem;
-  z-index: 1200;
-  width: min(440px, calc(100vw - 2rem));
-  transform: translate(-50%, calc(100% + 2rem));
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform 0.55s var(--ease-bounce),
-    opacity 0.4s var(--ease-out);
-}
-
-.newsletter-dock.is-visible {
-  transform: translate(-50%, 0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.newsletter-card {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.4rem 1.5rem 1.5rem;
-  background: var(--card-bg-solid);
-  border: 1px solid var(--border-light);
-  border-top: 3px solid var(--gold);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.newsletter-icon {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--forest-glow);
-  color: var(--forest);
-  font-size: 1.3rem;
-  line-height: 1;
-}
-
-.newsletter-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.newsletter-body h3 {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--forest);
-  margin-bottom: 0.25rem;
-  line-height: 1.2;
-}
-
-.newsletter-body p {
-  font-size: 0.92rem;
-  color: var(--ink-muted);
-  line-height: 1.5;
-  margin-bottom: 0.9rem;
-}
-
-.newsletter-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.6rem 1.4rem;
-  background: var(--gold);
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 0.95rem;
-  border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(201, 154, 60, 0.35);
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background var(--transition-fast);
-}
-
-.newsletter-cta:hover {
-  background: #B5872E;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(201, 154, 60, 0.4);
-}
-
-.newsletter-cta:focus-visible {
-  outline: 2px solid var(--forest);
-  outline-offset: 3px;
-}
-
-.newsletter-close {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.6rem;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border: none;
-  background: transparent;
-  color: var(--ink-faded);
-  font-size: 1.25rem;
-  line-height: 1;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: color var(--transition-fast), background var(--transition-fast);
-}
-
-.newsletter-close:hover {
-  color: var(--ink);
-  background: var(--border-light);
-}
-
-.newsletter-close:focus-visible {
-  outline: 2px solid var(--forest);
-  outline-offset: 2px;
-}
-
-@media (max-width: 480px) {
-  .newsletter-dock {
-    bottom: 0.75rem;
-  }
-  .newsletter-card {
-    padding: 1.25rem 1.25rem 1.3rem;
-    gap: 0.8rem;
-  }
-  .newsletter-icon {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .newsletter-dock {
-    transition: opacity 0.2s linear;
-    transform: translate(-50%, 0);
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   LAYOUT REFRESH — ornaments, drop cap, card accents
-───────────────────────────────────────────────────────────────────────────── */
-
-/* Ornamental divider (fleuron flanked by tapering rules) */
-.ornament {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem auto 1.1rem;
-  max-width: 320px;
-}
-
-.ornament::before,
-.ornament::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold));
-}
-
-.ornament::after {
-  background: linear-gradient(90deg, var(--gold), transparent);
-}
-
-.ornament span {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  line-height: 1;
-  color: var(--terracotta);
-}
-
-/* Drop cap on the About lead paragraph — author/manuscript feel */
-.about-lead::first-letter {
-  font-family: var(--font-display);
-  font-size: 3.4rem;
-  line-height: 0.8;
-  float: left;
-  margin: 0.35rem 0.6rem 0 0;
-  color: var(--forest);
-  text-shadow: 0 2px 0 rgba(201, 154, 60, 0.18);
-}
-
-/* Gold top rule accent on feature cards */
-.about-section,
-.contact-section {
-  border-top: 3px solid var(--gold);
-}
-
-@media (max-width: 560px) {
-  /* placeholder — spine accent removed */
 }

@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The Inked Tail - Official website of fantasy author Michael Garcia. Explore books, updates, and insights." />
-  <meta name="theme-color" content="#2d5a47" />
+  <meta name="theme-color" content="#3B4A33" />
   <title>The Inked Tail | Official Website</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="cozy.css">
 </head>
+
 <body class="home">
 
   <nav class="navbar">
@@ -33,6 +34,7 @@
 
   <section class="hero" style="--hero-bg: url('assets/background.jpg');">
     <h1>Discover the Stories</h1>
+    <div class="ornament"><span>&#10087;</span></div>
     <p>Character-driven fantasy set in worlds that breathe — built piece by piece, lore first.</p>
   </section>
 
@@ -87,7 +89,6 @@
 
     <!-- Dot indicators — populated and shown by JS when >1 book -->
     <div class="book-dots" id="bookDots"></div>
-
   </section>
 
   <!-- ═══════════════════════════════════════════════════
@@ -209,6 +210,51 @@
     setCardWidths();
     updateUI();
     window.addEventListener('resize', function() { setCardWidths(); updateUI(); });
+  })();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════
+       NEWSLETTER — slide-up invite (dismissible, remembers)
+  ════════════════════════════════════════════════════ -->
+  <aside class="newsletter-dock" id="newsletterDock" aria-label="Newsletter signup" hidden>
+    <div class="newsletter-card">
+      <button class="newsletter-close" id="newsletterClose" type="button" aria-label="Dismiss newsletter invite">&times;</button>
+      <div class="newsletter-icon" aria-hidden="true">&#10022;</div>
+      <div class="newsletter-body">
+        <h3>Join the Journey</h3>
+        <p>New chapters, release news, and dispatches from the world of Eldrin — straight to your inbox.</p>
+        <a class="newsletter-cta" href="https://newsletter.theinkedtail.com" target="_blank" rel="noopener">Join the Newsletter &rarr;</a>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+  /* Newsletter slide-up: appears on scroll or after a delay, dismissible,
+     and remembers the dismissal so returning readers aren't nagged. */
+  (function initNewsletterDock() {
+    var dock = document.getElementById('newsletterDock');
+    if (!dock) return;
+    var KEY = 'itNewsletterDismissed';
+    try { if (localStorage.getItem(KEY)) return; } catch (e) {}
+
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      dock.hidden = false;
+      requestAnimationFrame(function () { dock.classList.add('is-visible'); });
+      window.removeEventListener('scroll', onScroll);
+    }
+    function onScroll() { if (window.scrollY > 500) show(); }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(show, 10000);
+
+    document.getElementById('newsletterClose').addEventListener('click', function () {
+      dock.classList.remove('is-visible');
+      setTimeout(function () { dock.hidden = true; }, 600);
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+    });
   })();
   </script>
 
