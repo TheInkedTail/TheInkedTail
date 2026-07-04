@@ -10,31 +10,43 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="cozy.css">
 </head>
 
-<body class="home">
+<body class="home has-newsletter-band">
 
   <nav class="navbar">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-    <a href="https://x.com/TheInkedTail" target="_blank" rel="noopener">X</a>
-    <a href="charsheet.html" target="_blank" rel="noopener">D&amp;D Character Sheet</a>
+    <a href="index.html" class="nav-brand" aria-label="The Inked Tail — home">
+      <img src="assets/logo-large.png" alt="The Inked Tail fox logo" />
+      <span>The Inked Tail</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://x.com/TheInkedTail" target="_blank" rel="noopener">X</a>
+      <a href="charsheet.html" target="_blank" rel="noopener">D&amp;D Sheet</a>
+    </div>
   </nav>
 
-  <header>
-    <div class="logo-title">
-      <img src="assets/logo-large.png" alt="The Inked Tail logo" class="logo" />
+  <!-- ═══════════════════════════════════════════════════
+       HERO — painted landscape of Eldrin
+  ════════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Introduction">
+    <!-- To change the rotating hero images, edit the data-backgrounds list below
+         (comma-separated paths; the first one shows immediately) -->
+    <div class="hero-bg" id="heroBg" style="--hero-bg: url('assets/background.jpeg');"
+         data-backgrounds="assets/background.jpeg, assets/background2.jpeg, assets/background3.jpeg, assets/background4.jpeg"></div>
+    <div class="hero-inner">
+      <p class="hero-kicker">Fantasy by Michael Garcia</p>
+      <h1>Stories from worlds that <em>breathe</em></h1>
+      <p class="hero-tagline">Character-driven fictions set in lore rich worlds — built piece by piece, lore first.</p>
+      <div class="hero-actions">
+        <a href="#books" class="btn btn-gold">Read the Books</a>
+        <a href="https://newsletter.theinkedtail.com" class="btn btn-ghost-light" target="_blank" rel="noopener">Join the Newsletter</a>
+      </div>
     </div>
-    <p>Fantasy stories from the pen of Michael Garcia</p>
-  </header>
-
-  <section class="hero" style="--hero-bg: url('assets/background.jpg');">
-    <h1>Discover the Stories</h1>
-    <div class="ornament"><span>&#10087;</span></div>
-    <p>Character-driven fantasy set in worlds that breathe — built piece by piece, lore first.</p>
   </section>
 
   <!-- ════════════════════════════════════════════════════════════
@@ -46,10 +58,14 @@
        description, and buy-button links. See UPDATING-BOOKS.md for
        the full step-by-step guide.
   ═══════════════════════════════════════════════════════════════ -->
-  <section class="books-section">
-    <h2 class="section-heading">My Books</h2>
+  <section class="section books-section" id="books">
+    <div class="chapter-heading reveal">
+      <p class="chapter-kicker">The Library</p>
+      <h2>My Books</h2>
+      <p class="chapter-note">Every story here began as worldbuilding notes — maps, lore, and characters that refused to stay on the page.</p>
+    </div>
 
-    <div class="book-carousel-outer">
+    <div class="book-carousel-outer reveal">
       <!-- Prev button — shown automatically by JS when >1 book -->
       <button class="book-nav-btn book-nav-prev" id="bookPrev" aria-label="Previous book">&#10094;</button>
 
@@ -58,7 +74,9 @@
 
           <!-- ═══ BOOK 1 ═══ -->
           <article class="book-card">
-            <img src="assets/coverv1.jpg" alt="Tail of the Stray book cover" class="book-cover">
+            <div class="book-cover-wrap">
+              <img src="assets/coverv1.jpg" alt="Tail of the Stray book cover" class="book-cover">
+            </div>
             <div class="book-details">
               <span class="book-series">Tail of the Stray &middot; Book 1</span>
               <h3 class="book-title">Tail of the Stray</h3>
@@ -69,7 +87,7 @@
               </p>
               <div class="book-links">
                 <a href="https://amzn.to/4beg8s3" class="book-btn book-btn-primary" target="_blank" rel="noopener noreferrer">Amazon eBook/Paperback</a>
-				<a href="https://www.barnesandnoble.com/w/tail-of-the-stray-michael-a-garcia/1149876726?ean=9798994954010" class="book-btn book-btn-primary" target="_blank" rel="noopener noreferrer">B&N Paperback</a>
+                <a href="https://www.barnesandnoble.com/w/tail-of-the-stray-michael-a-garcia/1149876726?ean=9798994954010" class="book-btn book-btn-primary" target="_blank" rel="noopener noreferrer">B&N Paperback</a>
                 <a href="https://shop.ingramspark.com/b/084?params=2Ce23nRY56SFTZWiBVYKTdbghO2tz3zpdPyUd5dYnww" class="book-btn book-btn-secondary" target="_blank" rel="noopener noreferrer">Direct Order (IngramSpark)</a>
               </div>
             </div>
@@ -90,39 +108,95 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       EXPLORE / NAV CARDS
+       FROM THE DESK — pull quote
   ════════════════════════════════════════════════════ -->
-  <div class="explore-section">
-    <h2 class="section-heading">Explore</h2>
-    <section class="blurbs">
-      <a href="about.html" class="blurb-link">
-        <div class="blurb">
-          <h2>About the Author</h2>
-          <p>Learn about Michael's background, influences, and the worldbuilding process behind his stories.</p>
-        </div>
-      </a>
-<a href="contact.html" class="blurb-link">
-        <div class="blurb">
-          <h2>Contact</h2>
-          <p>Questions, feedback, or just want to say hello? Reach out directly.</p>
-        </div>
-      </a>
-    </section>
-  </div>
+  <section class="quote-band reveal" aria-label="From the author">
+    <div class="fleuron" aria-hidden="true">&#10087;</div>
+    <blockquote>A good story isn't an escape from reality. It's an invitation into another one — explored out of pure curiosity.</blockquote>
+    <cite>Michael Garcia</cite>
+  </section>
 
   <!-- ═══════════════════════════════════════════════════
-       SOCIAL / FIND ME ONLINE
+       EXPLORE — table of contents
   ════════════════════════════════════════════════════ -->
-  <div class="social-section">
-    <h2>Find Me Online</h2>
-    <div class="social-links">
-      <a href="https://x.com/TheInkedTail" class="social-link" target="_blank" rel="noopener">X &middot; @TheInkedTail</a>
-      <a href="https://www.amazon.com/stores/Michael-Garcia/author/B0F74F5L97?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=306bda97-f6a5-498f-b119-cb25ebedbadc" class="social-link" target="_blank" rel="noopener">Amazon Author Page</a>
+  <section class="section" aria-label="Explore the site">
+    <div class="chapter-heading reveal">
+      <p class="chapter-kicker">Table of Contents</p>
+      <h2>Explore</h2>
     </div>
-  </div>
+
+    <div class="toc reveal">
+      <a href="about.html" class="toc-row">
+        <span class="toc-num">01</span>
+        <span class="toc-body">
+          <h3>About the Author</h3>
+          <p>Michael's background, influences, and the worldbuilding process behind his stories.</p>
+        </span>
+        <span class="toc-leader" aria-hidden="true"></span>
+        <span class="toc-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a href="contact.html" class="toc-row">
+        <span class="toc-num">02</span>
+        <span class="toc-body">
+          <h3>Contact</h3>
+          <p>Questions, feedback, or just want to say hello? Reach out directly.</p>
+        </span>
+        <span class="toc-leader" aria-hidden="true"></span>
+        <span class="toc-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a href="charsheet.html" class="toc-row" target="_blank" rel="noopener">
+        <span class="toc-num">03</span>
+        <span class="toc-body">
+          <h3>D&amp;D Character Sheet</h3>
+          <p>A free digital 5e character sheet tool — where Velrik's story began.</p>
+        </span>
+        <span class="toc-leader" aria-hidden="true"></span>
+        <span class="toc-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       NEWSLETTER BAND
+  ════════════════════════════════════════════════════ -->
+  <section class="newsletter-band" aria-label="Newsletter">
+    <div class="newsletter-band-inner">
+      <div>
+        <h2>Dispatches from <em>Eldrin</em></h2>
+        <p>New chapters, release news, and worldbuilding notes — straight to your inbox. No spam, just stories.</p>
+      </div>
+      <a href="https://newsletter.theinkedtail.com" class="btn btn-gold" target="_blank" rel="noopener">Join the Newsletter &rarr;</a>
+    </div>
+  </section>
 
   <footer>
-    <p>&copy; 2026 Michael Garcia. All rights reserved.</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-wordmark">The Inked Tail</div>
+        <p>Fantasy stories from the pen of Michael Garcia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="charsheet.html" target="_blank" rel="noopener">D&amp;D Character Sheet</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Elsewhere</h4>
+        <ul>
+          <li><a href="https://x.com/TheInkedTail" target="_blank" rel="noopener">X &middot; @TheInkedTail</a></li>
+          <li><a href="https://www.amazon.com/stores/Michael-Garcia/author/B0F74F5L97?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=306bda97-f6a5-498f-b119-cb25ebedbadc" target="_blank" rel="noopener">Amazon Author Page</a></li>
+          <li><a href="https://newsletter.theinkedtail.com" target="_blank" rel="noopener">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <span>&copy; 2026 Michael Garcia. All rights reserved.</span>
+      <span>Worlds built lore first.</span>
+    </div>
   </footer>
 
   <script>
@@ -150,7 +224,7 @@
 
     // Multi-book carousel
     var current = 0;
-    var GAP     = 24;   // px — matches 1.5rem gap in CSS
+    var GAP     = 24;   // px — matches gap in CSS
     var PEEK    = 60;   // px of next card visible on right
 
     // Reveal nav buttons
@@ -207,6 +281,68 @@
     setCardWidths();
     updateUI();
     window.addEventListener('resize', function() { setCardWidths(); updateUI(); });
+  })();
+  </script>
+
+  <script>
+  /* ── Hero background cycle ────────────────────────────────────────────────
+     Crossfades through the images listed in #heroBg's data-backgrounds.
+     Skips entirely if there's only one image or reduced motion is preferred. */
+  (function initHeroCycle() {
+    var first = document.getElementById('heroBg');
+    if (!first) return;
+    var list = (first.getAttribute('data-backgrounds') || '')
+      .split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    if (list.length < 2) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var INTERVAL = 9000; // ms per image
+
+    // Preload so crossfades are seamless
+    list.forEach(function (src) { var img = new Image(); img.src = src; });
+
+    // Second layer for crossfading
+    var second = first.cloneNode(false);
+    second.removeAttribute('id');
+    second.style.opacity = '0';
+    first.parentElement.insertBefore(second, first.nextSibling);
+
+    var layers = [first, second];
+    var idx = 0, top = 0;
+
+    setInterval(function () {
+      idx = (idx + 1) % list.length;
+      var showing = layers[top];
+      var incoming = layers[1 - top];
+      incoming.style.setProperty('--hero-bg', "url('" + list[idx] + "')");
+      // restart the slow drift animation on the incoming layer
+      incoming.style.animation = 'none';
+      void incoming.offsetWidth;
+      incoming.style.animation = '';
+      incoming.style.opacity = '1';
+      showing.style.opacity = '0';
+      top = 1 - top;
+    }, INTERVAL);
+  })();
+  </script>
+
+  <script>
+  /* ── Scroll reveal (progressive enhancement) ── */
+  (function initReveal() {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('revealed'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
   })();
   </script>
 

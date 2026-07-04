@@ -28,7 +28,9 @@ All book cards live inside the `<div id="bookTrack">` element.
 ```html
 <!-- ═══ BOOK 2 ═══ -->
 <article class="book-card">
-  <img src="assets/YOUR-COVER-FILENAME.jpg" alt="Your Book Title cover" class="book-cover">
+  <div class="book-cover-wrap">
+    <img src="assets/YOUR-COVER-FILENAME.jpg" alt="Your Book Title cover" class="book-cover">
+  </div>
   <div class="book-details">
     <span class="book-series">Series Name &middot; Book 2</span>
     <h3 class="book-title">Your Book Title</h3>
@@ -135,7 +137,8 @@ Delete the entire block between `<!-- ═══ BOOK # ═══ -->` and `<!-- 
 ```
 <article class="book-card">
   │
-  ├── <img class="book-cover">           ← cover image
+  ├── <div class="book-cover-wrap">      ← cover wrapper (adds page-edge effect)
+  │     └── <img class="book-cover">     ← cover image
   │
   └── <div class="book-details">
         ├── <span class="book-series">   ← "Series · Book #"

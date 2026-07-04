@@ -6,10 +6,10 @@ Official website for fantasy author **Michael Garcia**, featuring cozy fantasy s
 
 - `index.html` — Home page with book carousel and navigation
 - `about.html` — About the author
-- `schedule.html` — Release calendar for upcoming chapters
 - `contact.html` — Contact information
 - `charsheet.html` — D&D 5e Character Sheet Tool (separate project)
 - `cozy.css` — Main stylesheet
+- `UPDATING-BOOKS.md` — How to add/edit books on the home page
 
 ## 📜 Licensing
 
@@ -37,7 +37,7 @@ Uses material from the *System Reference Document 5.1* under the
 ## 🛠️ Development
 
 The site uses:
-- **Fonts**: IM Fell English (display) + Source Sans 3 (body)
+- **Fonts**: Cormorant Garamond (display) + IM Fell English (accents) + Source Sans 3 (body)
 - **No build tools required** — pure HTML/CSS/JS
 - Hosted via standard static hosting
 
