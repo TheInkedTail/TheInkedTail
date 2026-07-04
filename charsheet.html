@@ -40,7 +40,7 @@
     }
 
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth;scroll-padding-top:76px}
+    html{scroll-behavior:smooth;scroll-padding-top:76px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
     body{
       font-family:var(--font-body);
       color:var(--ink);
@@ -458,11 +458,31 @@
       .char-layout{grid-template-columns:1fr;justify-items:center}
       .char-layout > div{width:100%}
       .portrait{width:130px;height:130px}
-      .container{padding:0 .6rem 2rem}
+      /* room at the bottom so the dice tray never covers the last section */
+      .container{padding:0 .6rem 5.5rem}
       .sheet-section{padding:1rem}
       .section-bar{margin:-1rem -1rem .85rem;padding:.6rem 1rem}
-      .topbar{padding:.5rem .75rem}
-      .dice-tray{right:.6rem;bottom:.6rem}
+
+      /* Topbar: brand + actions on row one, nav as a scrollable row below */
+      .topbar{padding:.5rem .75rem;row-gap:.35rem}
+      .topbar-brand{font-size:1rem}
+      .topbar-brand em{display:none}
+      .topbar-nav{order:3;width:100%;justify-content:flex-start;
+        -webkit-mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 12px),transparent);
+        mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 12px),transparent);
+        padding:0 8px}
+      .topbar-actions{margin-left:auto}
+      .tb-btn{padding:.4rem .7rem;font-size:.78rem}
+      .save-status{display:none}
+
+      /* Tables keep readable column widths and scroll sideways instead of crushing */
+      .tbl{min-width:560px}
+      .ability-block input{width:100%;max-width:58px}
+      .hp-quick input{width:64px}
+
+      .dice-tray{right:.6rem;bottom:calc(.6rem + env(safe-area-inset-bottom,0px))}
+      .dice-head{padding:.5rem .8rem}
+      .roll-log{max-height:130px}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1532,6 +1552,12 @@ document.addEventListener('click', function (e) {
 /* ── Init ──────────────────────────────────────────────────────────────── */
 loadState();
 renderAll();
+
+/* Start the dice tray collapsed on small screens so it doesn't cover the
+   sheet; rolling anything reopens it automatically. */
+if (window.innerWidth < 640) {
+  document.getElementById('diceTray').classList.add('closed');
+}
 
 })();
 </script>
