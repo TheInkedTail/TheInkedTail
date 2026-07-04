@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-H8CT9YYFCQ"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-H8CT9YYFCQ');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Get in touch with Michael Garcia, author of The Inked Tail. Questions, feedback, or just want to say hello — reach out!" />
+  <meta name="theme-color" content="#3B4A33" />
+  <title>Contact | The Inked Tail</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="cozy.css">
+</head>
+<body class="contact">
+
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://x.com/TheInkedTail" target="_blank" rel="noopener">X</a>
+    <a href="charsheet.html" target="_blank" rel="noopener">D&amp;D Character Sheet</a>
+  </nav>
+
+  <header>
+    <h1>Contact</h1>
+    <div class="ornament"><span>&#10087;</span></div>
+    <p>Get in touch with the author.</p>
+  </header>
+
+  <section class="contact-section">
+    <h2>Say Hello</h2>
+    <p>Whether you have questions, feedback, or just want to chat about fantasy and D&amp;D — feel free to reach out.</p>
+    <a class="contact-link" href="mailto:theinkedtail@gmail.com">Email the Author</a>
+  </section>
+
+  <div class="social-section">
+    <h2>Find Me Online</h2>
+    <div class="social-links">
+      <a href="https://x.com/TheInkedTail" class="social-link" target="_blank" rel="noopener">X &middot; @TheInkedTail</a>
+      <a href="https://www.amazon.com/stores/Michael-Garcia/author/B0F74F5L97?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=306bda97-f6a5-498f-b119-cb25ebedbadc" class="social-link" target="_blank" rel="noopener">Amazon Author Page</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Michael Garcia. All rights reserved.</p>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════
+       NEWSLETTER — slide-up invite (dismissible, remembers)
+  ════════════════════════════════════════════════════ -->
+  <aside class="newsletter-dock" id="newsletterDock" aria-label="Newsletter signup" hidden>
+    <div class="newsletter-card">
+      <button class="newsletter-close" id="newsletterClose" type="button" aria-label="Dismiss newsletter invite">&times;</button>
+      <div class="newsletter-icon" aria-hidden="true">&#10022;</div>
+      <div class="newsletter-body">
+        <h3>Join the Journey</h3>
+        <p>New chapters, release news, and dispatches from the world of Eldrin — straight to your inbox.</p>
+        <a class="newsletter-cta" href="https://newsletter.theinkedtail.com" target="_blank" rel="noopener">Join the Newsletter &rarr;</a>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+  (function initNewsletterDock() {
+    var dock = document.getElementById('newsletterDock');
+    if (!dock) return;
+    var KEY = 'itNewsletterDismissed';
+    try { if (localStorage.getItem(KEY)) return; } catch (e) {}
+
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      dock.hidden = false;
+      requestAnimationFrame(function () { dock.classList.add('is-visible'); });
+      window.removeEventListener('scroll', onScroll);
+    }
+    function onScroll() { if (window.scrollY > 500) show(); }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(show, 10000);
+
+    document.getElementById('newsletterClose').addEventListener('click', function () {
+      dock.classList.remove('is-visible');
+      setTimeout(function () { dock.hidden = true; }, 600);
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+    });
+  })();
+  </script>
+
+</body>
+</html>
