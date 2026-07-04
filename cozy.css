@@ -237,7 +237,7 @@ body.contact .nav-links a[href="contact.html"]::after {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
