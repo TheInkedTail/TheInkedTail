@@ -590,6 +590,22 @@ body.contact .nav-links a[href="contact.html"]::after {
   font-weight: 500;
 }
 
+/* Book status notice (e.g. "Now in revision") */
+.book-status {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 62ch;
+  margin-bottom: 1.4rem;
+  padding: 0.85rem 1.1rem;
+  border-left: 3px solid var(--gold);
+  background: var(--forest-glow);
+  border-radius: 0 3px 3px 0;
+  text-align: left;
+}
+
+.book-status strong { color: var(--forest); }
+
 /* Carousel navigation */
 .book-nav-btn {
   display: none; /* JS reveals when >1 book */

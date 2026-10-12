@@ -1,0 +1,26 @@
+# ── OS junk ──────────────────────────────
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+.directory
+.Trash-*
+
+# ── Editors / IDEs ───────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.kate-swp
+
+# ── Backups & scratch ────────────────────
+*.bak
+*.tmp
+*.orig
+
+# ── Local tooling (if ever added) ────────
+node_modules/
+.env
+.env.*
+*.log
